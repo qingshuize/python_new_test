@@ -19,7 +19,7 @@ def cacul(x,y):
     return pro
 
 def sub_cacul(x,y):
-    pro=ten.sub(x,y)
+    pro=ten.subtract(x,y)
     return pro
 
 if __name__ == '__main__':

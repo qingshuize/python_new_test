@@ -97,7 +97,7 @@ def counrty_list_show(coun):
 
 def world_map_test():
     map_style=RotateStyle('#44ff77')
-    map=World(style=map_style)
+    map=World(style=map_style,value_formatter=lambda x: '{}'.format(x)+u'国家')
     map.title='world map scope'
     country_list=[]
     chinese_name={
@@ -116,11 +116,12 @@ def world_map_test():
     for code,name in COUNTRIES.items():
         if name in ('United States','United Kingdom','France','Italy','Japan','Germany','Canada'):
             country_list.append(code)
+            detail_dict[code]=chinese_name[name]
             print(code)
-        if name == 'Russian Federation':
-            unique=code
-    print(country_list)
-    map.add(u'G7国家',country_list)
+        #if name == 'Russian Federation':
+        #    unique=code
+    for x in detail_dict.items():
+        map.add(u'G7国家',)
     #map.add(u'G8国家',country_list+[unique])
     map.render_to_file('/Users/qmp/Desktop/map1.svg')
 
@@ -190,8 +191,10 @@ def json_use():
     data_img = pygal.Bar(x_label_rotation=70,style=data_style,show_legend=False)
     data_img.title='Stars Python Project in Github Bar'
     data_img.x_labels=name
-    data_img.render_to_png('/Users/qmp/Desktop/High_Tech_map.png')
-    #data_img.add('stars number',stars)
+    data_img.add('stars number',stars)
+    data_img.render_to_png(filename='/Users/qmp/Desktop/python_bar.png')
+    #with open('/Users/qmp/Desktop/python_bar.html','wb') as f:
+    #    f.write(data_img.render_table(style= True))
     #data_img.render_to_file('/Users/qmp/Desktop/python_bar.svg')
 
 if __name__ == '__main__':
