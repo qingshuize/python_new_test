@@ -12,7 +12,7 @@ def index():
     return  '''
         <html>
             <body>
-                <h1>hello pygal and flask</h1>
+                <h1>hello pygal</h1>
                 <figure>
                 <embed type="image/svg+xml" src="/random/" />
                 </figure>
