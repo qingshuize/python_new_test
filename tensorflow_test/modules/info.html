@@ -1,0 +1,16 @@
+{%extends 'main.html'%}
+{%block content%}
+<p><strong>Info reactive</strong></p>
+{% if info is None%}
+        <script>alert('not found!')</script>
+{%else%}
+<ol>
+    {%for x in info%}
+        <li><span>作者:{{x['name']}}</span></li>
+        <li><span>页数:{{x['page']}}</span></li>
+        <li><span>价格:{{x['price']}}</span></li>
+        <br>
+    {%end%}
+</ol>
+{%end%}
+{%end%}

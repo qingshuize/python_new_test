@@ -1,0 +1,25 @@
+{%extends 'main.html' %}
+{%block title%}
+    <title>index1 page</title>
+    <script>
+        alert('login success!')
+    </script>
+    <link rel="stylesheet" href="{{ static_url('text.css')}}">
+{%end%}
+{%block content%}
+<!--<h1><strong>receive data</strong></h1>-->
+{%if (input1 and input2)%}
+    <p>LOGIN NAME:{{input1}}</p>
+    <!--<P>PASSWD:{{input2}}<br>-->
+    <span>CONTENT:</span><br>
+    <label>大写格式:</label>
+    {% for line in input3.split(' ')%}
+        <span>{{line.upper()}}</span>
+    {%end%}
+<!--{%set masklink="<a href='hi:link@test.com'>link click</a>"%}-->
+<!--{{input4}}-->
+<!--{%raw linkify("https://fb.me/burtsbooks", extra_params='ref=website')%}-->
+{%else%}
+    <p>登录名或密码不能为空!</p>
+    {%end%}
+{%end%}

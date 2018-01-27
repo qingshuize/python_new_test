@@ -1,0 +1,18 @@
+{%extends 'main.html'%}
+{%block title%}
+<title>index2 page</title>
+{%end%}
+{%block content%}
+<strong>{%module index2()%}</strong>
+<strong>{%module test(test)%}</strong>
+{% set link="<a href='goto:example@example.com'>click on</a>"%}
+<p>
+    For more information about our selection, hours or events, please email us at
+    <a href="mailto:contact@burtsbooks.com">contact@burtsbooks.com</a>.
+</p>
+
+<p>
+    click on
+{% raw linkify("https://fb.me/burtsbooks", extra_params='ref=website') %}
+</p>
+{%end%}

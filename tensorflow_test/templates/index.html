@@ -1,0 +1,13 @@
+{%extends 'main.html'%}
+{%block title %}
+<h1>welcome! ---> start now!!!</h1>
+{%end%}
+{%block content%}
+<form method="post" action="/index1">
+    <p>登录名:<input type="text" name="input1" VALUE=""><br></p>
+    <p>链接:<input type="text" name="link" value=""><br></p>
+    <p>密码:<input type="password" name="input2" VALUE=""><br></p>
+    <p><textarea rows=9 cols=25 name="text_data"></textarea></p>
+    <p>登陆<input type="submit" VALUE="login">
+</form>
+{%end%}

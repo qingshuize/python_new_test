@@ -1,0 +1,15 @@
+<!--{% module info(info)%}-->
+{%extends 'main.html'%}
+{%block content%}
+<div>
+    <form method="post" action="/info">
+        <!--title:<input type="text" name="title"><br>-->
+        <!--source:<input type="text" name="source"><br>-->
+        <label>ADD:</label><br>
+        name:<input type="text" name="name"><br>
+        page:<input type="number" name="page"><br>
+        price:<input type="number" name="price"><br>
+        <input type="submit">
+    </form>
+</div>
+{%end%}
