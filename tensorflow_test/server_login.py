@@ -10,34 +10,48 @@ def ssh_login(ip,username,passwd,cmd,unit='秒'):
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(ip,22,username,passwd,timeout=10)
         for m in cmd:
-            print(30 * '-' + '%s connected' % ip + 30 * '-'+'\n')
+            print('\n'+50 * '-' + '%s connected' % ip + 50 * '-'+'\n')
             stdin, stdout, stderr = ssh.exec_command(m)
             stdin.write("Y")
             out = stdout.readlines()
             for info in out:
-                # if len(out) > 1:
-                # for info in out[:-1] if '-aux' in m else out[1:]:
-                # if 'crawl' in info:
-                    try:
-                        raw_start_time=re.findall(' \d+:[\d+:]+',info)[0]
+                try:
+                    raw_start_time=re.findall('\d+:\d+',info)[0]
+                    time_run = re.findall('\d+:\d+', info)[1]
+                    # hour = time_run.split(':')[0].encode('utf8')
+                    # minute = time_run.split(':')[1].encode('utf8')
+                    pid = re.findall('root(.*)', info)[0].strip().split(' ')[0]
+
+                    if len(raw_start_time)>5:
+                    # if hour>='12':
+                        print('超时间:开始于%s'%str(raw_start_time))
+                        print('info:' + info)
+                        # ssh.exec_command('kill -9 %s' % pid)
+                        # print('kill ok!')
+                    else:
                         start_time=datetime.datetime.strptime(datetime.date.today().strftime('%Y-%m-%d')+' '+raw_start_time,'%Y-%m-%d %H:%M')
                         print('start time:' + str(start_time))
-                        now_time=datetime.datetime.now()
-                        s=3600.0 if unit=='小时' else 60.0 if unit=='分钟' else 1.0
-                        run_time=(now_time-start_time).seconds/s
-                        if run_time>=1:
-                            print('servers ip:'+ip)
+                        now_time = datetime.datetime.now()
+                        # s = 3600.0 if unit == '小时' else 60.0 if unit == '分钟' else 1.0
+                        run_time_hour = (now_time - start_time).seconds / 3600
+                        run_time_minute=((now_time - start_time).seconds-run_time_hour*3600)/60
+                        if (run_time_minute>30 and run_time_hour==0) or run_time_hour>0:
+                        # if minute>='10' and hour=='0':
                             print('info:' + info)
-                            pid = re.findall('root(.*)',info)[0].strip().split(' ')[0]
-                            print('pid:' + pid)
-                            print('\nselect long time: %0.2f%s'%(run_time,unit))
-                            if 'phantomjs' in info or 'ganggu_industry' in info:
-                                ssh.exec_command('kill -9 %s'%pid)
-                                print('kill ok!')
+                            print('servers ip:' + ip)
+                            print('time_run:%s小时%s分钟' %(run_time_hour,run_time_minute))
+                            # print('time_run:%s小时%s分钟'%(hour,minute))
+                            try:
+                                if re.findall('phantomjs', info)[0] or run_time_hour>10:
+                                    ssh.exec_command('kill -9 %s' % pid)
+                                    print('kill ok!')
+                            except:
+                                print('略过...')
 
-                    except Exception as e:
-                        print(e)
-        print(30 * '*' + '%s close' % ip + 30 * '*'+'\n')
+                except Exception as e:
+                    print(e)
+
+        print('\n'+60 * '#' + '%s close' % ip + 60 * '#'+'\n')
         ssh.close()
     except Exception as e:
         print(e)
@@ -72,6 +86,5 @@ if __name__ =='__main__':
         print("start... ... ... ...")
         a = threading.Thread(target=ssh_login, args=(addr, username, passwd, cmd,'小时'))
         a.start()
-        # time.sleep(5)
         a.join()
         # time.sleep(10)
