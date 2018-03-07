@@ -8,7 +8,7 @@ def ssh_login(ip,username,passwd,cmd,unit='秒'):
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(ip,22,username,passwd,timeout=10)
+        ssh.connect(ip,22,username,passwd)
         for m in cmd:
             print('\n'+50 * '-' + '%s connected' % ip + 50 * '-'+'\n')
             stdin, stdout, stderr = ssh.exec_command(m)
@@ -40,9 +40,8 @@ def ssh_login(ip,username,passwd,cmd,unit='秒'):
                             print('info:' + info)
                             print('servers ip:' + ip)
                             print('time_run:%s小时%s分钟' %(run_time_hour,run_time_minute))
-                            # print('time_run:%s小时%s分钟'%(hour,minute))
                             try:
-                                if re.findall('phantomjs', info)[0] or run_time_hour>10:
+                                if re.findall('phantomjs', info) or run_time_hour>=10:
                                     ssh.exec_command('kill -9 %s' % pid)
                                     print('kill ok!')
                             except:
