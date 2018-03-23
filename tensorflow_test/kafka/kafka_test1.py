@@ -3,7 +3,7 @@
 import sys
 import time
 import json
-from kafka import *
+from tensorflow_test.kafka import *
 from kafka.errors import KafkaError
 
 KAFAKA_HOST = '127.0.0.1'
@@ -32,6 +32,7 @@ class Kafka_producer():
             print(e)
 
 
+
 class Kafka_consumer():
 
     def __init__(self, host, port, topic, groupid):
@@ -49,8 +50,10 @@ class Kafka_consumer():
         try:
             for message in self.consumer:
                 yield message
-        except KeyboardInterrupt, e:
-            print e
+        except KeyboardInterrupt as e:
+            print(e)
+
+
 
 
 def main(xtype,group):
@@ -64,6 +67,7 @@ def main(xtype,group):
                 # params = '{"msg" : "%s"}' % str(_id)
                     producer.sendjsondata()
                 time.sleep(0.5)
+                producer.close()
 
         if xtype == 'C':
             consumer = Kafka_consumer(KAFAKA_HOST, KAFAKA_PORT, KAFAKA_TOPIC,group)

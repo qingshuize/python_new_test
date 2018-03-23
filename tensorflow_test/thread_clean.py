@@ -1,5 +1,5 @@
 #coding:utf8
-import pexpect
+# import pexpect
 import paramiko
 import threading
 import re,time,datetime
@@ -16,11 +16,13 @@ def ssh_login(ip,username,passwd,cmd,unit='秒'):
             out = stdout.readlines()
             for info in out:
                 try:
-                    raw_start_time=re.findall(r'\d+:\d+',info)[0]
-                    if raw_start_time=='0:00':
+                    try:
                         raw_start_time=re.findall(r'[A-Za-z]+\d{2}',info)[0]
                         raw_start_time=datetime.datetime.strptime(raw_start_time+str(datetime.date.today())[:4]
 ,'%b%d%Y')
+                    except Exception:
+                        raw_start_time = re.findall(r'\d+:\d+', info)[0]
+
                     # time_run = re.findall('\d+:\d+', info)[1]
                     # hour = time_run.split(':')[0].encode('utf8')
                     # minute = time_run.split(':')[1].encode('utf8')
@@ -45,14 +47,14 @@ def ssh_login(ip,username,passwd,cmd,unit='秒'):
                         run_time_hour = (now_time - start_time).seconds / 3600
                         run_time_minute=((now_time - start_time).seconds-run_time_hour*3600)/60
                         if not re.findall('Xvfb -br', info):
-                            if (run_time_minute>=40 and run_time_hour==0) or run_time_hour>0:
+                            if (run_time_minute>=30 and run_time_hour==0) or run_time_hour>0:
                         # if minute>='10' and hour=='0':
                                 print('info:' + info)
                                 print('servers ip:' + ip)
                                 print('time_run:%s小时%s分钟' %(run_time_hour,run_time_minute))
                                 try:
 
-                                    if re.findall('(phantomjs|shenbao)', info) or run_time_hour>=10:
+                                    if re.findall('(phantomjs|shenbao)', info) or run_time_hour>=14:
                                         ssh.exec_command('kill -9 %s' % pid)
                                         print('kill ok!')
                                 except:

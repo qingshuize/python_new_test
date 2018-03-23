@@ -39,7 +39,7 @@ class Indexhandle(RequestHandler):
     def set_default_headers(self):
         self.set_header('Contnet-Type','json/html')
     def get(self):
-        self.render('index.html')
+        self.render('info.html')
         # arg=self.get_argument('a','welcome',strip=False)
         # #args=self.get_arguments('q',strip=False)
         # #arg=self.get_body_argument('q')
