@@ -2,7 +2,7 @@
 from PIL import Image
 from pytesser import pytesser
 def Image_handle():
-    img=Image.open('/Users/qmp/Desktop/img.jpeg')
+    img=Image.open('/Users/qmp/Desktop/1.png')
 
     #把彩色图像转化为灰度图像。RBG转化到HSI彩色空间，采用I分量
     img1= img.convert('L')
