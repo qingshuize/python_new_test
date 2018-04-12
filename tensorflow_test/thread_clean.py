@@ -1,18 +1,19 @@
 #coding:utf8
-# import pexpect
 import paramiko
 import threading
-import re,time,datetime
+import re
+import datetime
 
-def ssh_login(ip,username,passwd,cmd,unit='秒'):
+def ssh_login(ip,username,passwd,cmd,limit_hour):
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(ip,22,username,passwd)
+        print('\n' + 50 * '-' + '%s connected' % ip + 60 * '-' + '\n')
         for m in cmd:
-            print('\n'+50 * '-' + '%s connected' % ip + 50 * '-'+'\n')
             stdin, stdout, stderr = ssh.exec_command(m)
             stdin.write("Y")
+            print('successfully connect!!')
             out = stdout.readlines()
             for info in out:
                 try:
@@ -47,17 +48,16 @@ def ssh_login(ip,username,passwd,cmd,unit='秒'):
                         run_time_hour = (now_time - start_time).seconds / 3600
                         run_time_minute=((now_time - start_time).seconds-run_time_hour*3600)/60
                         if not re.findall('Xvfb -br', info):
-                            if (run_time_minute>=30 and run_time_hour==0) or run_time_hour>0:
-                        # if minute>='10' and hour=='0':
+                            if (run_time_minute>=40 and run_time_hour==0) or run_time_hour>0:
                                 print('info:' + info)
                                 print('servers ip:' + ip)
                                 print('time_run:%s小时%s分钟' %(run_time_hour,run_time_minute))
                                 try:
-
-                                    if re.findall('(phantomjs|shenbao)', info) or run_time_hour>=14:
+                                    if re.findall('(phantomjs|shenbao|jiguan)', info) or run_time_hour>limit_hour:
                                         ssh.exec_command('kill -9 %s' % pid)
                                         print('kill ok!')
-                                except:
+                                except Exception as e:
+                                    print(e)
                                     print('略过...')
 
                 except Exception as e:
@@ -67,24 +67,25 @@ def ssh_login(ip,username,passwd,cmd,unit='秒'):
         ssh.close()
     except Exception as e:
         print(e)
-        print('%s\tError\n'%(ip))
+        print('%s\t connect Error!!!\n'%(ip))
 
 
 
 if __name__ =='__main__':
     server_dict = {
-        '123.206.55.84': 'kF4hMs4mk6sGW',
-        '123.206.6.125': 'YdWa9fdPD4Myp2F',
-        '123.206.49.157': 'YdWa9fdPD4Myp2F',
+        '123.206.73.147': 'tXDmVLUMq9CDY',
         '123.206.84.240': 'YdWa9fdPD4Myp2F',
         '123.206.15.238': 'YdWa9fdPD4Myp2F',
-        '123.207.162.192': 'YdWa9fdPD4Myp2F',
-        '139.199.97.233': 'sh9vSGMinwr',
-        '123.206.46.158': '55fIecQIETuhZR',
-        '123.206.73.147': 'tXDmVLUMq9CDY',
-        '123.206.60.97': 'kF4hMs4mk6sGW',
         '47.94.43.94': '1993fileWL0301',
-        '47.95.36.57': '1993newsWL0301'
+        '123.206.6.125': 'YdWa9fdPD4Myp2F',
+        '123.207.162.192': 'YdWa9fdPD4Myp2F',
+        '123.206.46.158': '55fIecQIETuhZR',
+        '123.206.60.97': 'kF4hMs4mk6sGW',
+        '123.206.77.105': 'kF4hMs4mk6sGW',
+        '123.206.49.157': 'YdWa9fdPD4Myp2F',
+        '47.95.36.57': '1993newsWL0301',
+        '123.206.55.84': 'kF4hMs4mk6sGW',
+        '139.199.97.233': 'sh9vSGMinwr'
     }
     #ps -aux|grep phantomjs
     cmd = ['ps -aux|grep -e "crawl" -e "phantomjs" -e "Xvfb -br"']
@@ -95,8 +96,7 @@ if __name__ =='__main__':
     for addr,passwd in server_dict.items():
         username = "root"
         threads = []
-        print("start... ... ... ...")
-        a = threading.Thread(target=ssh_login, args=(addr, username, passwd, cmd,'小时'))
+        a = threading.Thread(target=ssh_login, args=(addr, username, passwd, cmd,15))
         a.start()
         a.join()
         # time.sleep(10)

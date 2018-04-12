@@ -1,5 +1,4 @@
 #coding:utf8
-import pexpect
 import paramiko
 import threading
 import re,time,datetime
