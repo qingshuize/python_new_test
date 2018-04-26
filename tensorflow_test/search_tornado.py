@@ -6,6 +6,9 @@ from tornado.options import options,define
 from tornado.ioloop import IOLoop
 from peewee import *
 import time
+import commands
+import re
+import json
 
 pro_db = MySQLDatabase(
     host='118.89.232.142',
@@ -29,7 +32,7 @@ class Indexhandle(RequestHandler):
         self.set_header('Contnet-Type','json/html')
     def get(self):
         self.flush()
-        self.render('tornado/search_ui.html')
+        self.render('tornado_html/search_ui.html')
 
 
 class Infohandle(RequestHandler):
@@ -46,7 +49,8 @@ class Infohandle(RequestHandler):
         else:
             words=get_data(start,end)
             time.sleep(0.1)
-            self.render('tornado/info.html', words=words, start_time=start,end_time=end)
+            # return json.dumps()
+            self.render('tornado_html/info.html', words=words, start_time=start,end_time=end)
 
 def get_data(start,end):
     sql = 'select words,log_time,nickname from qmp_search_log where log_time>%s and log_time<%s order by log_time desc'
@@ -67,7 +71,21 @@ def get_data(start,end):
 
 
 if __name__=='__main__':
-    options.parse_command_line()
-    server = HTTPServer(Application())
-    server.listen(options.port)
-    IOLoop.current().start()
+    try:
+        options.parse_command_line()
+        server = HTTPServer(Application())
+        server.listen(options.port)
+        IOLoop.current().start()
+    except Exception as e:
+        print(type(e))
+        if e.args[0]==48:
+            print('hahah')
+            cmd_pid=commands.getoutput('lsof -i:9900|grep python')
+            print(cmd_pid)
+            pid=re.findall(r'\d+',cmd_pid)[0]
+            print(pid)
+            try:
+                kill_cmd='kill -9 %s'
+                commands.getoutput(kill_cmd%pid)
+            except Exception as e:
+                print('kill port ok!')

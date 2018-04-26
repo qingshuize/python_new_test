@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 rng = numpy.random
 
 # Parameters
-learning_rate = 1e-3
+learning_rate = 1e-2
 training_epochs = 3000
-display_step = 10
+display_step = 20
 
 # Training Data
 train_X = numpy.asarray([3.3,4.4,5.5,6.71,6.93,4.168,9.779,6.182,7.59,2.167,7.042,10.791,5.313,7.997,5.654,9.27,3.1])
@@ -47,13 +47,11 @@ with tf.Session() as sess:
             sess.run(optimizer, feed_dict={X: x, Y: y})
 
         if epoch % display_step == 0:
-            print "Epoch:", '%04d' % (epoch+1), "cost=", \
-                "{:.9f}".format(sess.run(cost, feed_dict={X: train_X, Y:train_Y})), \
-                "W=", sess.run(W), "b=", sess.run(b)
+            print("Epoch:", '%04d' % (epoch+1), "cost=","{:.9f}".format(sess.run(cost, feed_dict={X: train_X, Y:train_Y})), \
+                "W=", sess.run(W), "b=", sess.run(b))
 
-    print "Optimization Finished!"
-    print "cost=", sess.run(cost, feed_dict={X: train_X, Y: train_Y}), \
-          "W=", sess.run(W), "b=", sess.run(b)
+    print("Optimization Finished!")
+    print("cost=", sess.run(cost, feed_dict={X: train_X, Y: train_Y}),"W=", sess.run(W), "b=", sess.run(b))
 
     #Graphic display
     plt.plot(train_X, train_Y, 'bo', label='Original data')

@@ -4,7 +4,7 @@ import threading
 import re
 import datetime
 
-def ssh_login(ip,username,passwd,cmd,limit_hour):
+def ssh_login(ip,username,passwd,cmd,limit_hour=''):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
@@ -24,10 +24,11 @@ def ssh_login(ip,username,passwd,cmd,limit_hour):
                     except Exception:
                         raw_start_time = re.findall(r'\d+:\d+', info)[0]
 
-                    # time_run = re.findall('\d+:\d+', info)[1]
-                    # hour = time_run.split(':')[0].encode('utf8')
-                    # minute = time_run.split(':')[1].encode('utf8')
+                    time_run = re.findall('\d+:\d+', info)[1]
+                    hour = time_run.split(':')[0].encode('utf8')
+                    minute = time_run.split(':')[1].encode('utf8')
                     pid = re.findall('root(.*)', info)[0].strip().split(' ')[0]
+
 
                     if len(str(raw_start_time))>5:
                     # if hour>='12':
@@ -37,7 +38,7 @@ def ssh_login(ip,username,passwd,cmd,limit_hour):
                         now_time = datetime.datetime.now()
                         run_day=(now_time - raw_start_time).days
                         print('运行天数：'+str(run_day))
-                        if run_day>=2:
+                        if run_day>=2 or re.findall('(phantomjs|shenbao|jiguan)', info):
                             ssh.exec_command('kill -9 %s' % pid)
                             print('kill ok!')
                     else:
@@ -53,7 +54,7 @@ def ssh_login(ip,username,passwd,cmd,limit_hour):
                                 print('servers ip:' + ip)
                                 print('time_run:%s小时%s分钟' %(run_time_hour,run_time_minute))
                                 try:
-                                    if re.findall('(phantomjs|shenbao|jiguan)', info) or run_time_hour>limit_hour:
+                                    if re.findall('(phantomjs|shenbao|jiguan)', info):
                                         ssh.exec_command('kill -9 %s' % pid)
                                         print('kill ok!')
                                 except Exception as e:
@@ -86,17 +87,17 @@ if __name__ =='__main__':
         '47.95.36.57': '1993newsWL0301',
         '123.206.55.84': 'kF4hMs4mk6sGW',
         '139.199.97.233': 'sh9vSGMinwr'
+        # '39.107.205.65':'19930301qiMBpG'  #大数据服务器
     }
     #ps -aux|grep phantomjs
+
+    # cmd=['ps -ef|grep -e "catch_thrift.py" -e "hbase-daemon.sh"']
     cmd = ['ps -aux|grep -e "crawl" -e "phantomjs" -e "Xvfb -br"']
            #,'ps -ef|grep crawl']  # 你要执行的命令列表
     # for i in range(1,4):
     #     print(40*'~'+'THE %s ROUNDS'%i+40*'~')
     #'分钟'，'小时', 默认单位：'天'
+    # for _ in range(4):
     for addr,passwd in server_dict.items():
         username = "root"
-        threads = []
-        a = threading.Thread(target=ssh_login, args=(addr, username, passwd, cmd,15))
-        a.start()
-        a.join()
-        # time.sleep(10)
+        ssh_login(addr, username, passwd, cmd)
