@@ -3,7 +3,7 @@
 import sys
 import time
 import json
-from tensorflow_test.kafka import *
+from python_spiders.kafka import *
 from kafka.errors import KafkaError
 
 KAFAKA_HOST = '127.0.0.1'

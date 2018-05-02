@@ -1,6 +1,6 @@
 #coding:utf8
 
-from tensorflow_test.kafka import KafkaConsumer
+from python_spiders.kafka import KafkaConsumer
 from kafka.errors import KafkaError
 import time
 import paramiko

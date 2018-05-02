@@ -1,6 +1,6 @@
 #coding: utf8
 
-from tensorflow_test.kafka import KafkaProducer
+from python_spiders.kafka import KafkaProducer
 import json
 import os
 import time
