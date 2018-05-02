@@ -61,7 +61,7 @@ target/
 # Created by .ignore support plugin (hsz.mobi)
 
 #pycharm
-.idea
+../../.idea
 .idea/news.iml
 .idea/*
 *.zip
