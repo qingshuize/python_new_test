@@ -1,6 +1,5 @@
 #coding:utf8
 import paramiko
-import threading
 import re
 import datetime
 
@@ -17,38 +16,36 @@ def ssh_login(ip,username,passwd,cmd,limit_hour=''):
             out = stdout.readlines()
             for info in out:
                 try:
-                    try:
-                        raw_start_time=re.findall(r'[A-Za-z]+\d{2}',info)[0]
-                        raw_start_time=datetime.datetime.strptime(raw_start_time+str(datetime.date.today())[:4]
-,'%b%d%Y')
-                    except Exception:
-                        raw_start_time = re.findall(r'\d+:\d+', info)[0]
+                    if not re.findall('(save_totalnew_html_spider|save_onenew_html_spider)', info):
+                        pid = re.findall('root(.*)', info)[0].strip().split(' ')[0]
 
-                    time_run = re.findall('\d+:\d+', info)[1]
-                    hour = time_run.split(':')[0].encode('utf8')
-                    minute = time_run.split(':')[1].encode('utf8')
-                    pid = re.findall('root(.*)', info)[0].strip().split(' ')[0]
+                        try:
+                            #不是当天，获取日期
+                            now_year=datetime.date.today().year
+                            raw_start_time=re.findall(r'[A-Za-z]+\d{2}',info)[0]
+                            raw_start_time=datetime.datetime.strptime(str(now_year)+raw_start_time,"%Y%b%d")
+                            print('超时间:开始于%s' % str(raw_start_time))
+                            print('info:' + info)
+                            run_day = (datetime.datetime.now()-raw_start_time).days
+                            print('运行天数：' + str(run_day))
+                            if run_day > 1 or re.findall('(phantomjs|shenbao|jiguan)', info):
+                                ssh.exec_command('kill -9 %s' % pid)
+                                print('kill ok!')
 
+                        except:
+                            raw_start_time = re.findall(r'\d+:\d+', info)[0]
 
-                    if len(str(raw_start_time))>5:
-                    # if hour>='12':
-                        print('超时间:开始于%s'%str(raw_start_time))
-                        print('info:' + info)
-                        print(raw_start_time)
-                        now_time = datetime.datetime.now()
-                        run_day=(now_time - raw_start_time).days
-                        print('运行天数：'+str(run_day))
-                        if run_day>=2 or re.findall('(phantomjs|shenbao|jiguan)', info):
-                            ssh.exec_command('kill -9 %s' % pid)
-                            print('kill ok!')
-                    else:
-                        start_time=datetime.datetime.strptime(datetime.date.today().strftime('%Y-%m-%d')+' '+raw_start_time,'%Y-%m-%d %H:%M')
-                        print('start time:' + str(start_time))
-                        now_time = datetime.datetime.now()
-                        # s = 3600.0 if unit == '小时' else 60.0 if unit == '分钟' else 1.0
-                        run_time_hour = (now_time - start_time).seconds / 3600
-                        run_time_minute=((now_time - start_time).seconds-run_time_hour*3600)/60
-                        if not re.findall('Xvfb -br', info):
+                            time_run = re.findall('\d+:\d+', info)[1]
+                            hour = time_run.split(':')[0].encode('utf8')
+                            minute = time_run.split(':')[1].encode('utf8')
+
+                            start_time=datetime.datetime.strptime(datetime.date.today().strftime('%Y-%m-%d')+' '+raw_start_time,'%Y-%m-%d %H:%M')
+                            print('start time:' + str(start_time))
+                            now_time = datetime.datetime.now()
+                            # s = 3600.0 if unit == '小时' else 60.0 if unit == '分钟' else 1.0
+                            run_time_hour = (now_time - start_time).seconds / 3600
+                            run_time_minute=((now_time - start_time).seconds-run_time_hour*3600)/60
+
                             if (run_time_minute>=40 and run_time_hour==0) or run_time_hour>0:
                                 print('info:' + info)
                                 print('servers ip:' + ip)
@@ -89,11 +86,10 @@ if __name__ =='__main__':
         '139.199.97.233': 'sh9vSGMinwr'
         # '39.107.205.65':'19930301qiMBpG'  #大数据服务器
     }
-    #ps -aux|grep phantomjs
 
+    ##执行的指令
     # cmd=['ps -ef|grep -e "catch_thrift.py" -e "hbase-daemon.sh"']
     cmd = ['ps -aux|grep -e "crawl" -e "phantomjs" -e "Xvfb -br"']
-           #,'ps -ef|grep crawl']  # 你要执行的命令列表
     # for i in range(1,4):
     #     print(40*'~'+'THE %s ROUNDS'%i+40*'~')
     #'分钟'，'小时', 默认单位：'天'

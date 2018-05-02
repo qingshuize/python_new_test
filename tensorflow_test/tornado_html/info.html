@@ -18,6 +18,9 @@
 
 
     <!--</script>-->
+    <script language="javascript">
+        var i=1
+    </script>
 </head>
 <body>
 <label>当前时间:</label>
@@ -58,8 +61,10 @@
 </div>
 <form method="post" action="/info">
         <label> 查询搜搜频次入口:</label><br>
-        start_time:<input type="datetime-local" name="start_time"><br>
-        end_time: <input type="datetime-local" name="end_time"><br>
+        <label> 查询搜搜频次入口:</label><br>
+        <label>开始时间:</label><input type="datetime-local" name="start_time"><br>
+        <label>结束时间:</label> <input type="datetime-local" name="end_time"><br>
+        <label>数目:</label><input type="number" name="num" min="0" max="50000" step="5" value="100"><br>
         <input type="submit">
 </form>
 <table border="1">
@@ -68,13 +73,19 @@
     </thead>
     <tbody>
     <tr>
+        <th>id</th>
         <th>搜索词</th>
         <!--<th>搜索时间</th>-->
         <th>时间段</th>
         <th>频次</th>
     </tr>
+    <label><strong>查询所耗时约：{{use_time}}</strong></label>
     {%for word in words%}
     <tr>
+        <td>
+            <script>document.write(i);</script>
+            <script>i=i+1;</script>
+        </td>
         <td>
             <a href="#">{{word[0]}}</a>
         </td>

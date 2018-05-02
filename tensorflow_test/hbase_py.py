@@ -53,9 +53,9 @@ def Hbase_get(date,num):
     print('mintues:',mintues)
     if (date>date_time or date<'20180416') and date!='today':
         data = {
-            'data': 'input data error!',
+            'data': None,
             'update_time': now_time,
-            'message': 'failed',
+            'message': 'input data error!',
             'status': -1,
         }
         return jsonify(data)
@@ -63,44 +63,53 @@ def Hbase_get(date,num):
         if date=='today':
             print('date:', date)
             date = date_time
-        tablename='search_history_order_%s'%date
-        conn = happybase.Connection('39.107.205.65')
-        table = conn.table(tablename)
-        colum='order_value:'
-        ## 列匹配
-        # query_str = "SingleColumnValueFilter ('order_value:','',=, 'regexstring:(^%s35)', true, false)"%hour
+
+       # uery_str = "SingleColumnValueFilter ('order_value:','',=, 'regexstring:(^%s35)', true, false)"%hour
         if date==date_time:
             select_hour=hour if mintues>=35 else hour-1
+            select_hour=str(select_hour)
+            select_hour='0'+select_hour if len(select_hour)==1 else select_hour
         else:
             select_hour=23
-        filter = "RowFilter(=,'regexstring:^%s')" % select_hour
-        # filter = "FuzzyRowFilter(=,'regexstring:^%s')"% select_hour
-        query = table.scan(filter=filter)
-        result = list(query)
+        print(select_hour)
 
-        #关闭连接
-        # conn.close()
+        try:
+            tablename = 'search_history_order_%s' % date
+            conn = happybase.Connection('39.107.205.65')
+            table = conn.table(tablename)
+            colum = 'order_value:'
+            filter = "RowFilter(=,'regexstring:^%s')" % select_hour
+            ## 列匹配
+            # filter = "FuzzyRowFilter(=,'regexstring:^%s')"% select_hour
+            query = table.scan(filter=filter)
+            result = list(query)
+            # # print(result)
+            row_key=result[0][0]
+            print(row_key)
+            # timestamp=result
+            # print(timestamp)
+            value_data=result[0][1].get(colum)
+            item=eval(value_data)
+            # print(type(item))
+            print('total items:'+str(len(item)))
+            #截取前num条数据
+            if num=='all':
+                n=None
+            else:
+                n=int(num)
+            data=item[:n]
+            # 关闭连接
+            conn.close()
+        except:
+            data=None
 
-        # # print(result)
-        row_key=result[0][0]
-        print(row_key)
-        # timestamp=result
-        # print(timestamp)
-        value_data=result[0][1].get(colum)
-        item=eval(value_data)
-        # print(type(item))
-        print('total items:'+str(len(item)))
-        #截取前num条数据
-        if num=='all':
-            n=None
-        else:
-            n=int(num)
         timestamp=(date[:4]+'-'+date[4:-2]+'-'+date[-2:]+' '+str(select_hour)+':'+'35'+':'+'00')
+        status, message = (0, 'success') if data else (-1, 'service failed')    #可能thriftserver关闭导致
         data={
-            'data':item[:n],
+            'data':data,
             'update_time':timestamp,
-            'message': 'success',
-            'status': 0,
+            'message': status,
+            'status': message,
         }
         return jsonify(data)
 if __name__ == '__main__':

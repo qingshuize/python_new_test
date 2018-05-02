@@ -6,15 +6,19 @@ from tornado.options import options,define
 from tornado.ioloop import IOLoop
 from peewee import *
 import time
-import commands
 import re
-import json
+import commands
+from playhouse.shortcuts import RetryOperationalError
 
-pro_db = MySQLDatabase(
-    host='118.89.232.142',
-    database='qmp_logs',
-    user="root",
-    passwd="Qmppachong!@#321",
+
+class RetryMySQLDatabase(RetryOperationalError, MySQLDatabase):
+    pass
+
+db = RetryMySQLDatabase(
+    host='47.94.38.128',
+    database='shujujiance',
+    user="shujujiance_pyt",
+    passwd="f5W1vg##e1cf",
     charset='utf8'
 )
 
@@ -26,7 +30,8 @@ class Application(tornado.web.Application):
             url(r'/',Indexhandle,name='index_url'),
             url(r'/info',Infohandle,name='info_url'),
         ]
-        tornado.web.Application.__init__(self, handlers)
+        settings = {'debug': True}
+        tornado.web.Application.__init__(self, handlers, **settings)
 class Indexhandle(RequestHandler):
     def set_default_headers(self):
         self.set_header('Contnet-Type','json/html')
@@ -44,17 +49,21 @@ class Infohandle(RequestHandler):
         print(start)
         end = self.get_argument('end_time').replace('T',' ')
         print(end)
-        if start>end:
-            self.write('error input!')
-        else:
-            words=get_data(start,end)
-            time.sleep(0.1)
-            # return json.dumps()
-            self.render('tornado_html/info.html', words=words, start_time=start,end_time=end)
+        num=str(self.get_argument('num'))
+        if start and end:
+            if start>end:
+                self.write('error input!')
+            else:
+                before_0=time.time()
+                words=get_data(start,end,num)
+                after_0=time.time()
+                time.sleep(0.1)
+                # return json.dumps()
+                self.render('tornado_html/info.html', words=words, start_time=start,end_time=end,use_time='%.2f s'%(after_0-before_0))
 
-def get_data(start,end):
-    sql = 'select words,log_time,nickname from qmp_search_log where log_time>%s and log_time<%s order by log_time desc'
-    cur = pro_db.execute_sql(sql, [start, end])
+def get_data(start,end,num):
+    sql = 'select words,create_time,nickname from search_magic_history where create_time>"%s" and create_time<"%s" order by create_time desc limit %s'%(start, end, num)
+    cur = db.execute_sql(sql)
     result = cur.fetchall()
     words=[]
     words_dict={}
@@ -75,7 +84,7 @@ if __name__=='__main__':
         options.parse_command_line()
         server = HTTPServer(Application())
         server.listen(options.port)
-        IOLoop.current().start()
+        IOLoop.current().instance().start()
     except Exception as e:
         print(type(e))
         if e.args[0]==48:

@@ -44,10 +44,12 @@
     </script>
 </div>
 </div>
+<br>
 <form method="post" action="/info" style="">
         <label> 查询搜搜频次入口:</label><br>
-        start_time:<input type="datetime-local" name="start_time"><br>
-        end_time: <input type="datetime-local" name="end_time"><br>
+        <label>开始时间:</label><input type="datetime-local" name="start_time"><br>
+        <label>结束时间:</label><input type="datetime-local" name="end_time"><br>
+        <label>数目:</label><input type="number" name="num" min="0" max="50000" step="5" value="100"><br>
         <input type="submit">
 </form>
 
