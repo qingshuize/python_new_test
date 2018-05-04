@@ -2,11 +2,13 @@
 import paramiko
 import re
 import datetime
+from threading import *
+from multiprocessing import Process
 
 def ssh_login(ip,username,passwd,cmd,limit_hour=''):
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(ip,22,username,passwd)
         print('\n' + 50 * '-' + '%s connected' % ip + 60 * '-' + '\n')
         for m in cmd:
@@ -60,12 +62,14 @@ def ssh_login(ip,username,passwd,cmd,limit_hour=''):
 
                 except Exception as e:
                     print(e)
+            ssh.close()
+            print('\n' + 60 * '#' + '%s close' % ip + 60 * '#' + '\n')
 
-        print('\n'+60 * '#' + '%s close' % ip + 60 * '#'+'\n')
-        ssh.close()
+
     except Exception as e:
         print(e)
         print('%s\t connect Error!!!\n'%(ip))
+
 
 
 
@@ -94,6 +98,10 @@ if __name__ =='__main__':
     #     print(40*'~'+'THE %s ROUNDS'%i+40*'~')
     #'分钟'，'小时', 默认单位：'天'
     # for _ in range(4):
+    # lock = Semaphore(1)
+    username = "root"
     for addr,passwd in server_dict.items():
-        username = "root"
         ssh_login(addr, username, passwd, cmd)
+        # s=Process(target=ssh_login,args=(addr, username, passwd, cmd))
+        # s.start()
+

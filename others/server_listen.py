@@ -93,11 +93,11 @@ def send_mail(avery_rate=None,mail_type='SSH连接异常'):
 
 if __name__=='__main__':
     master_server={
-        '123.206.29.196':'tXDmVLUMq9CDY',
+        '123.206.29.196':'tXDmVLUMq9CDY',   #爬虫主服务器
         '39.107.205.65': '19930301qiMBpG',  # 大数据主服务器
-        '39.107.204.13': '19930301qiMBpG',   # 大数据从服务器
-        '139.199.97.167':'sh9vSGMinwr',        #supervisor服务器监控
-        '123.206.73.147': 'tXDmVLUMq9CDY'
+        # '39.107.204.13': '19930301qiMBpG',   # 大数据从服务器
+        # '139.199.97.167':'sh9vSGMinwr',    #supervisor服务器监控
+        '123.206.73.147': 'tXDmVLUMq9CDY'   #爬虫服务器slave1
     }
     cmd='top -bi -n 180 -d 1|grep -E "Cpu"'   #间隔1s刷新一次，取样180次
     for ip,passwd in master_server.items():
