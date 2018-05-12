@@ -105,11 +105,94 @@ def del_file(filename):
         os.remove(path+x)
         print('delete file %s ok!'%x)
 
+from pyPdf import PdfFileWriter, PdfFileReader
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import cm
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+pdfmetrics.registerFont(TTFont('Songti', '/Library/Fonts/Songti.ttc'))
+
+
+#文字水印
+def create_word_watermark(content):
+
+    c=canvas.Canvas('watermark_word.pdf')
+    c.setFont("Songti", 20)
+
+    c.rotate(30)
+    c.skew(10,0)
+    c.saveState()
+
+    c.drawString(200, 100, content.decode('utf8'))
+    # c.drawText(content.decode('utf8'))
+    # 保存水印文件
+    c.save()
+    pdf_watermark = PdfFileReader(open("watermark_word.pdf","rb"))
+    return pdf_watermark
+
+
+
+##图片水印
+def create_pic_watermark(img):
+    f_pdf = 'watermark_img.pdf'
+    w_pdf = 25 * cm
+    h_pdf = 30 * cm
+    c = canvas.Canvas(f_pdf, pagesize=(w_pdf, h_pdf))
+    c.setFillAlpha(0.1)  # 设置透明度
+    print(c.drawImage(img,  8* cm, 1*cm, 5 * cm, 5 * cm))  # 这里的单位是物理尺寸
+    c.save()
+    pdf_watermark = PdfFileReader(open('watermark_img.pdf', 'rb'))
+    return pdf_watermark
+
+def solve_encrypt(pdf_input):
+    # PDF文件被加密了
+    if pdf_input.getIsEncrypted():
+        print('该PDF文件被加密了.')
+        # 尝试用空密码解密
+        try:
+            pdf_input.decrypt('')
+        except Exception as  e:
+            print('尝试用空密码解密失败.')
+            return False
+        else:
+            print('用空密码解密成功.')
+
+
+
+def add_watermark(pdf_file_in, pdf_watermark,pdf_file_out,max_page=None):
+    pdf_output = PdfFileWriter()
+    input_stream = open(pdf_file_in, 'rb')
+    pdf_input = PdfFileReader(input_stream)
+
+    # 获取PDF文件的页数
+    pageNum = pdf_input.getNumPages()
+
+    for i in range(pageNum):
+        page = pdf_input.getPage(i)
+        if i < max_page:
+            page.mergePage(pdf_watermark.getPage(0))
+            page.compressContentStreams()  # 压缩内容
+        pdf_output.addPage(page)
+    output_stream = open(os.path.join(pdf_file_out, os.path.basename(pdf_file_in)), 'wb')
+    pdf_output.write(output_stream)
+    output_stream.close()
+    input_stream.close()
+    return True
+
+
+
+
+
+
 if __name__ =='__main__':
+    pdf_watermark = create_pic_watermark(path + 'qmp_logo.png')  # 图片水印
+    pdf_watermark1 = create_word_watermark('企名片666')  # 文字水印
+
     # file_list=['1204342691.pdf','1204352020.PDF']
     # sql='select id,title,pdf_source_link from mf_neeq_total where company="" or company is null and pdf_source_link like "%%%%pdf" order by id limit 10'
     # sql='select code,pdf_source_link from mf_neeq_total inner join mf_capital_information where ipo_code=code and ipo_type="已挂牌" and category="公开转让说明书" limit 5,3'
-    sql='select id,company,pdf_source_link from mf_neeq_total where code="" and title regexp "券商公告" order by id desc limit 1'
+    # sql='select id,company,pdf_source_link from mf_neeq_total where code="" and title regexp "券商公告" order by id desc limit 1'
+    sql = 'select id,company,pdf_source_link from mf_neeq_total order by size desc limit 1'
     cur=URL_db.execute_sql(sql)
     res=cur.fetchall()
     # for file_name in file_list:
@@ -137,7 +220,9 @@ if __name__ =='__main__':
             with open(path+pdf_name,'w') as f:
                 f.write(ress.content)
 
-        pdfTotxt(path+pdf_name,path+file_name+'.txt')
+        add_watermark(path +pdf_name,pdf_watermark,path+'output',3) #添加前三页水印
+
+                # pdfTotxt(path+pdf_name,path+file_name+'.txt')
 
         # html_name=file_name+'.html'
         # if not os.path.exists(path+html_name):

@@ -1,7 +1,8 @@
 #coding:utf8
 ##在多台服务器虚拟环境下上安装所需的包
 import paramiko
-import time
+import time,sys
+
 
 def Server_pip_install(ip,username,passwd,cmd,package):
     ssh = paramiko.SSHClient()
@@ -48,11 +49,16 @@ if __name__ =='__main__':
     yum_cmd='sudo add-apt-repository ppa:coolwanglu/pdf2htmlex;yum -y install %s'
     cmd = 'source %s/qmp_venv/bin/activate;pip install %s;pip list'
     #'xlrd' #'xlwt'
-    package='pdf2htmlEX'
-    for addr,passwd in server_dict.items():
-        try:
-            username = "root"
-            Server_pip_install(addr, username, passwd, yum_cmd, package)
-            time.sleep(1)
-        except Exception as e:
-            print(e)
+    try:
+        package=sys.argv[-1]
+        print(package)
+        # package='pdf2htmlEX'
+        for addr,passwd in server_dict.items():
+            try:
+                username = "root"
+                Server_pip_install(addr, username, passwd, yum_cmd, package)
+                time.sleep(1)
+            except Exception as e:
+                print(e)
+    except Exception as e:
+        print(e)

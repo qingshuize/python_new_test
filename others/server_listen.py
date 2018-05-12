@@ -13,7 +13,8 @@ server_name = {
     '39.107.205.65': '大数据主服务器',
     '39.107.204.13': '大数据从服务器',
     '139.199.97.167': 'supervisor服务器监控',
-    '123.206.73.147': '爬虫服务器slave1'
+    '123.206.73.147': '爬虫服务器slave1',
+    '123.206.55.84': '爬虫服务器slave3'
 }
 
 def Cpu_handle(ip, username, passwd, cmd):
@@ -94,10 +95,11 @@ def send_mail(avery_rate=None,mail_type='SSH连接异常'):
 if __name__=='__main__':
     master_server={
         '123.206.29.196':'tXDmVLUMq9CDY',   #爬虫主服务器
-        '39.107.205.65': '19930301qiMBpG',  # 大数据主服务器
+        # '39.107.205.65': '19930301qiMBpG',  # 大数据主服务器
         # '39.107.204.13': '19930301qiMBpG',   # 大数据从服务器
         # '139.199.97.167':'sh9vSGMinwr',    #supervisor服务器监控
-        '123.206.73.147': 'tXDmVLUMq9CDY'   #爬虫服务器slave1
+        '123.206.73.147': 'tXDmVLUMq9CDY',   #爬虫服务器slave1
+        '123.206.55.84': 'kF4hMs4mk6sGW',   #爬虫服务器slave3
     }
     cmd='top -bi -n 180 -d 1|grep -E "Cpu"'   #间隔1s刷新一次，取样180次
     for ip,passwd in master_server.items():
