@@ -4,7 +4,10 @@ import datetime
 import happybase
 import commands
 import re
-from flask import Flask,jsonify
+from flask import Flask,jsonify,request
+from pdf_add_watermark import *
+import webbrowser
+sys.path.append("libs")
 app=Flask(__name__)
 
 @app.route('/',methods=['GET'])
@@ -42,6 +45,7 @@ def time2stamp(x,flag):
     return timestamp
 
 
+#hbase获取搜索热度排行
 @app.route('/time/<date>/show/<num>',methods=['GET'])
 def Hbase_get(date,num):
     now_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -112,6 +116,27 @@ def Hbase_get(date,num):
             'status': message,
         }
         return jsonify(data)
+
+
+@app.route('/pdf_download',methods=['GET'])
+def ADD_watermark2pdf():
+    link=request.values['link']
+    pdf_obj = PDF_watermark_handle()
+    pdf_obj.create_word_watermark('天空飘来五个字？','test0')
+    file_name=pdf_obj.get_url_content(link)
+    out_dest=pdf_obj.add_watermark(file_name,'test0.pdf','output/')
+    return '''
+    <html>
+    <head>
+    <body>
+    <a href="file://%s" download="dowload_pdf"><strong>pdf download</strong></a>
+    </body>
+    </html>
+    '''%(out_dest)
+
+
+
+
 if __name__ == '__main__':
     try:
         # Hbase_get()

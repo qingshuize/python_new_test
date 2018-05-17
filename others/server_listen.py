@@ -14,7 +14,8 @@ server_name = {
     '39.107.204.13': '大数据从服务器',
     '139.199.97.167': 'supervisor服务器监控',
     '123.206.73.147': '爬虫服务器slave1',
-    '123.206.55.84': '爬虫服务器slave3'
+    '123.206.55.84': '爬虫服务器slave3',
+    '118.89.232.201': '爬虫服务器slave15'
 }
 
 def Cpu_handle(ip, username, passwd, cmd):
@@ -100,6 +101,7 @@ if __name__=='__main__':
         # '139.199.97.167':'sh9vSGMinwr',    #supervisor服务器监控
         '123.206.73.147': 'tXDmVLUMq9CDY',   #爬虫服务器slave1
         '123.206.55.84': 'kF4hMs4mk6sGW',   #爬虫服务器slave3
+        '118.89.232.201': 'nPtCxmHIcr9yfH'  #爬虫服务器slave15
     }
     cmd='top -bi -n 180 -d 1|grep -E "Cpu"'   #间隔1s刷新一次，取样180次
     for ip,passwd in master_server.items():

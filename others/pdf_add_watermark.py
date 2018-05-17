@@ -9,6 +9,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.units import cm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from hashlib import md5
 
 #添加中文字体库
 pdfmetrics.registerFont(TTFont('Songti', '/Library/Fonts/Songti.ttc'))
@@ -22,14 +23,15 @@ class PDF_watermark_handle(object):
         self.pdf_h = 30 * cm    #pdf高
         self.pic_x=4 * cm       #水印图片宽
         self.pic_y=4 * cm       #水印图片高
+        self.path='/Users/qmp/Desktop/'
 
     #文字水印
-    def create_word_watermark(self,content):
+    def create_word_watermark(self,content,mark_name):
 
-        c=canvas.Canvas('watermark_word1.pdf')
+        c=canvas.Canvas(self.path+'%s.pdf'%mark_name)
         # c.setStrokeColorRGB(1, 1, 0.3)
-        c.setFillColorRGB(0.9, 0.9, 0.9)
-        c.setFont("Arial Unicode", 16)
+        c.setFillColorRGB(0.92, 0.92, 0.92)
+        c.setFont("Arial Unicode", 13)
         # c.rotate(9)
         # c.skew(10, -10)
         # # c.saveState()
@@ -38,7 +40,7 @@ class PDF_watermark_handle(object):
         c.rotate(-13)
         c.skew(10, 0)
         c.saveState()
-        for i in range(-10,30,3):
+        for i in range(-10,30,5):
             for j in range(-20,50,2):
                 c.drawString(i*cm, j*cm, content.decode('utf8'))
 
@@ -77,11 +79,11 @@ class PDF_watermark_handle(object):
 
 
 
-    def add_watermark(self,pdf_file_in, watermark_file,pdf_file_out):
+    def add_watermark(self,pdf_file, watermark_file,outdir):
         pdf_output = PdfFileWriter()
-        input_s = open(pdf_file_in, 'rb')
+        input_s = open(self.path+pdf_file, 'rb')
         pdf_input = PdfFileReader(input_s)
-        pdf_watermark = PdfFileReader(open(watermark_file, 'rb'))
+        pdf_watermark = PdfFileReader(open(self.path+watermark_file, 'rb'))
 
         #加密检测
         self.solve_encrypt(pdf_input)
@@ -95,34 +97,52 @@ class PDF_watermark_handle(object):
             page.mergePage(pdf_watermark.getPage(0))
             page.compressContentStreams()  # 压缩内容
             pdf_output.addPage(page)
-
-        output_s = open(os.path.join(pdf_file_out, os.path.basename(pdf_file_in)), 'wb')
+        if not os.path.exists(self.path+outdir):
+            os.makedirs(self.path+outdir)
+        output_s = open(self.path+outdir+pdf_file, 'wb')
         pdf_output.write(output_s)
         output_s.close()
         input_s.close()
+        return self.path+outdir+pdf_file
+
+    def get_url_content(self,url):
+        res=requests.get(url)
+        if res.status_code==200:
+            file_pdf=md5(url).hexdigest()+'.pdf'
+            with open(self.path + file_pdf, 'w') as f:
+                f.write(res.content)
+            print(file_pdf+' save ok!')
+            return file_pdf
+        else:
+            return False
+
+
+
 
 if __name__ == '__main__':
-    path='/Users/qmp/Desktop/'
-
-    #加水印之后的输出文件夹
-    out_dir=path+'output'
-
-    pdf_obj=PDF_watermark_handle()
-
-    #制作文字水印
-    pdf_obj.create_word_watermark('你是谁？')
-
-    #制作图片水印
-    pdf_obj.create_pic_watermark(path+'qmp_logo.png')
-
-    url='http://pdf1.qimingpian.com/announcement/5af515ae557ce.pdf'
-    file_pdf=url.split('/')[-1].strip()
-
-    if not os.path.exists(path+file_pdf):
-        res = requests.get(url)
-        with open(path+file_pdf,'w') as f:
-            f.write(res.content)
-        print(file_pdf)
-
-    #pdf添加水印保存
-    pdf_obj.add_watermark(path+file_pdf,'./watermark_img.pdf',out_dir)
+    pass
+#     path='/Users/qmp/Desktop/'
+#
+#     #加水印之后的输出文件夹
+#     out_dir='output'
+#
+#     pdf_obj=PDF_watermark_handle()
+#
+#     #制作文字水印
+#     pdf_obj.create_word_watermark('你是谁？')
+#
+#     #制作图片水印
+#     pdf_obj.create_pic_watermark(path+'qmp_logo.png')
+#
+#     # url='http://pdf1.qimingpian.com/announcement/5af515ae557ce.pdf'
+#     # file_pdf=url.split('/')[-1].strip()
+#     #
+#     # if not os.path.exists(path+file_pdf):
+#     #     res = requests.get(url)
+#     #     with open(path+file_pdf,'w') as f:
+#     #         f.write(res.content)
+#     #     print(file_pdf)
+#
+#     #pdf添加水印保存
+#     file_pdf='1.pdf'
+#     pdf_obj.add_watermark(file_pdf,'./watermark_img.pdf',out_dir)
