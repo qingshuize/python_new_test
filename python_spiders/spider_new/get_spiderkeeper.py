@@ -29,14 +29,15 @@ def get_spiderkeeper():
         print(20*"//"+'spider project:'+pro+20*"//")
         if res.status_code==200:
             raw_data=etree.HTML(res.text)
+            #/ html / body / div / div[1] / section[2] / div[1] / div[2] / table / tbody / tr[2] / td[4]
             #等待运行/html/body/div/div[1]/section[2]/div[1]/div[2]/table
             # 正在运行/html/body/div/div[1]/section[2]/div[2]/div[2]/table
-            item_types=['pending','running']
+            item_types=['pending']
             for item_type in item_types[:1]:
                 try:
                     print('data type:'+item_type)
                     i='1' if item_type=='pending' else '2'
-                    info_data=raw_data.xpath('//body/div/div[1]/section[2]/div[%s]/div[2]/table/tr'%i)
+                    info_data=raw_data.xpath('/html/body/div/div[1]/section[2]/div[%s]/div[2]/table/tbody/tr'%i)
                     for detail in info_data[1:]:
                         running_spiders_list=detail.xpath('td[3]/text()')
                         runtime_list=detail.xpath('td[4]/text()')
@@ -49,6 +50,4 @@ def get_spiderkeeper():
                     print(e)
     print(30*'-'+'END'+30*'-')
 if __name__ == '__main__':
-    for _ in range(5):
-        get_spiderkeeper()
-        time.sleep(3)
+    get_spiderkeeper()

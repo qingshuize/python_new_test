@@ -1,4 +1,5 @@
 #coding:utf8
+
 import paramiko
 import re
 import datetime
@@ -53,7 +54,7 @@ def ssh_login(ip,username,passwd,cmd,limit_hour=''):
                                 print('servers ip:' + ip)
                                 print('time_run:%s小时%s分钟' %(run_time_hour,run_time_minute))
                                 try:
-                                    if re.findall('(phantomjs|shenbao|jiguan|ipo_name_check)', info):
+                                    if re.findall('(phantomjs|shenbao|jiguan|ganggu_industry)', info):
                                         ssh.exec_command('kill -9 %s' % pid)
                                         print('kill ok!')
                                 except Exception as e:

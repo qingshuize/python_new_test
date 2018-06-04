@@ -62,7 +62,7 @@ class Infohandle(RequestHandler):
                 self.render('tornado_html/info.html', words=words, start_time=start,end_time=end,use_time='%.2f s'%(after_0-before_0))
 
 def get_data(start,end,num):
-    sql = 'select words,create_time,nickname from search_magic_history where create_time>"%s" and create_time<"%s" order by create_time desc limit %s'%(start, end, num)
+    sql = 'select words,create_time,nickname from search_magic_history where create_time>="%s" and create_time<="%s" order by create_time desc limit %s'%(start, end, num)
     cur = db.execute_sql(sql)
     result = cur.fetchall()
     words=[]

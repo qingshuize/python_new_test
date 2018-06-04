@@ -72,9 +72,8 @@ def send_mail(avery_rate=None,mail_type='SSH连接异常'):
                     create_time:%s
                     ''' % now
 
-    username = '15313862350'
-    password = '199377Lf'
-    sender = '15313862350@163.com'
+    password='Qimingpian666'
+    sender = 'wxk@shujujiance.com'
     receiver = "lf051@qimingpian.com"
 
     try:
@@ -84,8 +83,9 @@ def send_mail(avery_rate=None,mail_type='SSH连接异常'):
         msg['From'] = 'listener<%s>' % sender
         msg['To'] = receiver
         smtp = smtplib.SMTP()
-        smtp.connect('smtp.163.com')
-        smtp.login(username, password)
+        # smtp.connect('smtp.163.com')
+        smtp = smtplib.SMTP_SSL("smtp.exmail.qq.com", port=465)
+        smtp.login(sender, password)
         smtp.sendmail(sender, receiver, msg.as_string())
         smtp.quit()
         print("邮件发送成功")
