@@ -6,7 +6,6 @@ import time
 
 dest_host={
             "host":'127.0.0.1',
-            # "host":"10.30.51.108",
             "port":9200,
             "timeout": 10
         }
