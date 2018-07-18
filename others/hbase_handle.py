@@ -18,11 +18,7 @@ from flask import Flask,jsonify,request
 app=Flask(__name__)
 
 db = MySQLDatabase(
-    host='47.94.42.90',
-    database='shujujiance',
-    user="readonly",
-    passwd="pqRi2MXjFINsX1UP",
-    charset='utf8'
+##########
 )
 
 @app.route('/',methods=['GET','POST'])
@@ -186,10 +182,10 @@ def Hbase_controller(tag,date,num=1,size=20):
         base_t = 'search_company_t'
 
     try:
-        # conn = happybase.Connection(host="123.206.77.49", port=9090, timeout=None, autoconnect=True
+        # conn = happybase.Connection(host="###", port=9090, timeout=None, autoconnect=True
         #                             , table_prefix=None, table_prefix_separator=b'_', compat='0.98',
         #                             transport='buffered', protocol='binary')
-        pool = happybase.ConnectionPool(size=5,host="123.206.77.49", port=9090)
+        pool = happybase.ConnectionPool(size=5,host="###", port=9090)
         with pool.connection() as conn:
             colum = 'order:info'
             table = happybase.Table(base_t, conn)
