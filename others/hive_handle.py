@@ -18,13 +18,13 @@ URL_s_db = MySQLDatabase(
 class Hive_handle(object):
 
     def __init__(self):
-        # transport = TSocket.TSocket('123.206.77.49', 10000)
+        # transport = TSocket.TSocket('##', 10000)
         # transport = TTransport.TBufferedTransport(transport)
         # protocol = TBinaryProtocol.TBinaryProtocol(transport)
         # client = ThriftHive.Client(protocol)
         # transport.open()
 
-        self.conn = pyhs2.connect(host='123.206.77.49',
+        self.conn = pyhs2.connect(host='###',
                              port=10000,
                              authMechanism='PLAIN',#NOSASL
                              user='root',
@@ -66,7 +66,7 @@ class Hbase_handle(object):
     protocol：协议
     """
     def __init__(self):
-        self.conn = happybase.Connection(host="123.206.77.49", port=9090)
+        self.conn = happybase.Connection(host="###", port=9090)
 
     def create_t(self,table_name):
         families = {
