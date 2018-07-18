@@ -12,12 +12,7 @@ import signal
 import datetime
 
 qmpnews_db = MySQLDatabase(
-    host='47.94.38.128',
-    port=3306,
-    database='qmpnews',
-    user="qmpnews",
-    passwd="q1a#9nB@88RePws",
-    charset='utf8'
+##
 )
 
 
