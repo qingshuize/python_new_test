@@ -10,7 +10,7 @@ def Server_pip_install(ip,username,passwd,cmd,package):
     try:
         ssh.connect(ip,22,username,passwd)
         print('\n' + 50 * '-' + '%s connected' % ip + 60 * '-' + '\n')
-        env_path = '/alidata/qmp_code' if ip in ['47.94.43.94','47.95.36.57'] else '/qmp_code'
+        env_path = '/alidata/qmp_code' if ip in [] else '/qmp_code'
         stdin, stdout, stderr = ssh.exec_command(cmd%((env_path,package) if 'yum' not in cmd else package))
         # stdin, stdout, stderr = ssh.exec_command(cmd % package)
         stdin.write("Y")
@@ -32,19 +32,7 @@ def Server_pip_install(ip,username,passwd,cmd,package):
 
 if __name__ =='__main__':
     server_dict = {
-        # '123.206.73.147': 'tXDmVLUMq9CDY',
-        # '123.206.84.240': 'YdWa9fdPD4Myp2F',
-        # '123.206.15.238': 'YdWa9fdPD4Myp2F',
-        '47.94.43.94': '1993fileWL0301',
-        # '123.206.6.125': 'YdWa9fdPD4Myp2F',
-        # '123.207.162.192': 'YdWa9fdPD4Myp2F',
-        # '123.206.46.158': '55fIecQIETuhZR',
-        # '123.206.60.97': 'kF4hMs4mk6sGW',
-        # '123.206.77.105': 'kF4hMs4mk6sGW',
-        # '123.206.49.157': 'YdWa9fdPD4Myp2F',
-        '47.95.36.57': '1993newsWL0301',
-        # '123.206.55.84': 'kF4hMs4mk6sGW',
-        # '139.199.97.233': 'sh9vSGMinwr'
+       ######
     }
     yum_cmd='sudo add-apt-repository ppa:coolwanglu/pdf2htmlex;yum -y install %s'
     cmd = 'source %s/qmp_venv/bin/activate;pip install %s;pip list'
