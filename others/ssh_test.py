@@ -8,7 +8,7 @@ def ssh_test():
     for name in pdf_list:
         if name.endswith('.pdf'):
             print(name)
-            # commands.getoutput('scp %s root@47.94.43.94:/alidata1/www/pdf1.qimingpian.com/announcement/%s'%(name,name))
+            # commands.getoutput('scp %s root@###:/alidata1/www/pdf1.qimingpian.com/announcement/%s'%(name,name))
 
 #获取文件的编码方式
 def file_chardetect():
