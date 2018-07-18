@@ -79,8 +79,7 @@ def Person_card_search():
         }
         resp = requests.post(
             url=random.choice([
-                "http://127.0.0.1:9200/person_card/tags_info/_search",
-                # "http://10.30.50.229:9200/person_card/tags_info/_search"
+                "http://127.0.0.1:9200/person_card/tags_info/_search"
             ]),
         data=json.dumps(query),headers=headers)
 
