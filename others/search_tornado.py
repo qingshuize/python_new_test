@@ -15,11 +15,7 @@ class RetryMySQLDatabase(RetryOperationalError, MySQLDatabase):
     pass
 
 db = RetryMySQLDatabase(
-    host='47.94.38.128',
-    database='shujujiance',
-    user="shujujiance_pyt",
-    passwd="f5W1vg##e1cf",
-    charset='utf8'
+    
 )
 
 define('port',type=int,default=9900,help='port test')
