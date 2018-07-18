@@ -18,11 +18,7 @@ import urllib2
 path = '/Users/qmp/Desktop/'
 
 URL_db = MySQLDatabase(
-    host='47.94.38.128',
-    database='shujujiance',
-    user="shujujiance_pyt",
-    passwd="f5W1vg##e1cf",
-    charset='utf8'
+##
 )
 
 
