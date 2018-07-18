@@ -3,7 +3,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-import os,requests
+import requests,os
 from pyPdf import PdfFileWriter, PdfFileReader
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
@@ -11,7 +11,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from hashlib import md5
 
 #添加中文字体库
-pdfmetrics.registerFont(TTFont('Songti', '/Library/Fonts/Songti.ttc'))
+pdfmetrics.registerFont(TTFont('songti', '/Library/Fonts/Songti.ttc'))
 pdfmetrics.registerFont(TTFont('Arial Unicode', '/Library/Fonts/Arial Unicode.ttf'))
 
 class PDF_watermark_handle(object):
@@ -25,25 +25,26 @@ class PDF_watermark_handle(object):
         self.path='/Users/qmp/Desktop/'
 
     #文字水印
-    def create_word_watermark(self,content,mark_name):
+    def create_word_watermark(self,content,mark_name,w,h):
 
-        c=canvas.Canvas('%s.pdf'%mark_name)
-        # c.setStrokeColorRGB(1, 1, 0.3)
-        c.setFillColorRGB(0.92, 0.92, 0.92)
+        c=canvas.Canvas('%s'%mark_name)
+        # c.setStrokeColorRGB(0.2, 0, 0.3)
+        c.setFillGray(0.5)
+        # c.setFillColorRGB(0, 0, 0.92)
         c.setFont("Arial Unicode", 13)
-        # c.rotate(9)
+        c.rotate(9)
         # c.skew(10, -10)
-        # # c.saveState()
+        c.saveState()
         # c.restoreState()
         # c.translate(-0,- 0)
-        c.rotate(-13)
-        c.skew(10, 0)
-        c.saveState()
-        for i in range(-10,30,5):
-            for j in range(-20,50,2):
-                c.drawString(i, j, content.decode('utf8'))
+        # c.rotate(-13)
+        # c.skew(10, 0)
+        # c.saveState()
+        # for i in range(w,-w,-100):
+        #     for j in range(h,-h,-50):
+        #         c.drawString(i, j, content.decode('utf8'))
 
-        # c.drawCentredString(0, 0,content.decode('utf8'))
+        c.drawCentredString(float(w)/2, -13*2,content.decode('utf8'))
         # 保存水印文件
         c.save()
 
@@ -54,7 +55,7 @@ class PDF_watermark_handle(object):
         c = canvas.Canvas(f_pdf, pagesize=(self.pdf_w, self.pdf_h))
         c.setFillAlpha(0.13)  # 设置透明度
         #变形旋转效果
-        # c.rotate(14)
+        # c.rotate(13)
         # c.skew(10, 5)
         # c.saveState()
         # for i in range(0,50,10):
@@ -76,6 +77,19 @@ class PDF_watermark_handle(object):
             else:
                 print('解密成功.')
 
+    def get_pdf_size(self,pdf_input,i):
+
+        try:
+            # print(pdf_input.flattenedPages)
+            [_, _, x, y] = list(pdf_input.flattenedPages[i].get('/MediaBox'))
+            if x == 0 or y==0:
+                [x, _, _, y] = list(pdf_input.flattenedPages[i].get('/CropBox'))
+
+        except Exception as e:
+            print(e)
+            [_, _, x, y] = list(pdf_input.flattenedPages[i].get('/CropBox'))
+        print(x, y)
+        return x,y
 
 
     def add_watermark(self,pdf_file, watermark_file,outdir):
@@ -89,32 +103,29 @@ class PDF_watermark_handle(object):
         # 获取页数
         pageNum = pdf_input.getNumPages()
 
-        try:
-            [x, _, _, y] = list(pdf_input.flattenedPages[1].get('/CropBox'))
-            if x == 0:
-                [_, _, x, y] = list(pdf_input.flattenedPages[1].get('/MediaBox'))
-        except:
-            [_, _, x, y] = list(pdf_input.flattenedPages[1].get('/MediaBox'))
-        print(x,y)
-        self.pdf_w=x
-        self.pdf_h=y
-        self.create_pic_watermark('qmp_logo1.png')
+        w, h = self.get_pdf_size(pdf_input, 0)
+        self.create_word_watermark('你是谁？', watermark_file, w, h)
         print('add watermark ok!')
-        pdf_watermark = PdfFileReader(open(watermark_file, 'rb'))
 
-        # 给每一页打水印
-        for i in range(pageNum):
-            print(i)
-            page = pdf_input.getPage(i)
-            page.mergePage(pdf_watermark.getPage(0))
-            page.compressContentStreams()  # 压缩内容
-            pdf_output.addPage(page)
-        if not os.path.exists(self.path+outdir):
-            os.makedirs(self.path+outdir)
-        output_s = open(self.path+outdir+pdf_file, 'wb')
-        pdf_output.write(output_s)
-        output_s.close()
-        input_s.close()
+        # # 给每一页打水印
+        # for i in range(pageNum):
+        #     print(i)
+        #     page = pdf_input.getPage(i)
+        #     w, h = self.get_pdf_size(pdf_input, i)
+        #     self.create_word_watermark('你是谁？', watermark_file, w, h)
+        #     # self.create_pic_watermark('qmp_logo1.png')
+        #     print('add watermark ok!')
+        #     pdf_watermark = PdfFileReader(open(watermark_file, 'rb'))
+        #     page.mergePage(pdf_watermark.getPage(0))
+        #     page.compressContentStreams()  # 压缩内容
+        #     pdf_output.addPage(page)
+        # if not os.path.exists(self.path+outdir):
+        #     os.makedirs(self.path+outdir)
+        # out_file = pdf_file.replace('.pdf', '（加文字水印）.pdf')
+        # output_s = open(self.path+outdir+out_file, 'wb')
+        # pdf_output.write(output_s)
+        # output_s.close()
+        # input_s.close()
 
     def get_url_content(self,url):
         res=requests.get(url)
@@ -140,7 +151,7 @@ if __name__ == '__main__':
     pdf_obj=PDF_watermark_handle()
 #
 #     #制作文字水印
-#     pdf_obj.create_word_watermark('你是谁？')
+#     pdf_obj.create_word_watermark('你是谁？','watermark_word.pdf')
 #
 #     #制作图片水印
 #     pdf_obj.create_pic_watermark('qmp_logo1.png')
@@ -155,5 +166,5 @@ if __name__ == '__main__':
     #     print(file_pdf)
 #
     #pdf添加水印保存
-    file_pdf='5b03cba8b41cd.pdf'
-    pdf_obj.add_watermark(file_pdf,'watermark_img.pdf',out_dir)
+    file_pdf='5b177c4d37c4a.pdf'
+    pdf_obj.add_watermark(file_pdf,'watermark_word2.pdf',out_dir)

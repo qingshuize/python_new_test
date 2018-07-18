@@ -1,15 +1,29 @@
 #coding:utf8
+import sys
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
 from thrift.transport import TSocket
 from thrift.protocol import TBinaryProtocol
 from thrift.transport import TTransport
 from hbase import Hbase
 from hbase.ttypes import *
 import datetime,time
-import commands
 import re,json
+import happybase
+import commands
+from peewee import *
+
 
 from flask import Flask,jsonify,request
 app=Flask(__name__)
+
+db = MySQLDatabase(
+    host='47.94.42.90',
+    database='shujujiance',
+    user="readonly",
+    passwd="pqRi2MXjFINsX1UP",
+    charset='utf8'
+)
 
 @app.route('/',methods=['GET','POST'])
 def index():
@@ -26,7 +40,7 @@ def main(date):
     now_time=date_time.split(' ')[-1]
     try:
         date = date if date else now_date
-        hbase=Hbase_handle('search_history_order_%s'%date, '39.107.205.65', '9090')
+        hbase=Hbase_handle('search_history_order_%s'%date, '123.206.77.49', '9090')
         # hbase = Hbase_handle('add_table', 'localhost', '9090')
         # t_colum=hbase.getColumnDescriptors()
         # print(t_colum)
@@ -155,6 +169,101 @@ class Hbase_handle(object):
 
         return result
 
+
+def select_com():
+    sql='select company,yewu'
+
+def Hbase_controller(tag,date,num=1,size=20):
+    if tag == 's':
+        base_t = 'search_history_t'
+    elif tag == 'i':
+        base_t = 'search_item_t'
+    elif tag == 'o':
+        base_t = 'search_org_t'
+    elif tag == 'p':
+        base_t = 'search_person_t'
+    else:
+        base_t = 'search_company_t'
+
+    try:
+        # conn = happybase.Connection(host="123.206.77.49", port=9090, timeout=None, autoconnect=True
+        #                             , table_prefix=None, table_prefix_separator=b'_', compat='0.98',
+        #                             transport='buffered', protocol='binary')
+        pool = happybase.ConnectionPool(size=5,host="123.206.77.49", port=9090)
+        with pool.connection() as conn:
+            colum = 'order:info'
+            table = happybase.Table(base_t, conn)
+            content = table.row(date, [colum],include_timestamp=False)
+            print(type(content))
+            raw_data = eval(content[colum])
+            # print(type(raw_data))
+            print('total items:' + str(len(raw_data)))
+            # 截取前num条数据
+            if num == 'all':
+                n = None
+                size=1
+            else:
+                n = int(num)
+                size=int(size)
+            data = raw_data[(n-1):n*size]
+
+            # 关闭连接
+            conn.close()
+    except Exception as e:
+        print(e)
+        data = None
+    return data
+
+"""
+    date:日期，从20170101到20170104，参数形式如（20170101|20170104），一天形如20170401或today（当天）
+    page：页码
+    size：每页显示数目
+    tag：搜索项目（搜索热度（s），用户浏览人物（p），项目（i），机构排行（o），合作调用接口分析无产品公司排名（c））
+"""
+@app.route('/date/<date>/show/<page>/<size>/tag/<tag>',methods=['GET'])
+def Main(date,page,size,tag='s'):
+
+    now_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    date_time=datetime.date.today().strftime('%Y%m%d')
+    date_list=date.split('|')
+    flag=0
+    if len(date_list)!=1:
+        s_date=date_list[0]
+        e_date=date_list[1] if date_list[1] else date_time
+        flag=1
+    else:
+        date = date_time if date == 'today' else date
+        s_date=e_date= date
+
+
+    if s_date>date_time or s_date<'20180401':
+        data = {
+            'data': None,
+            'update_time': now_time,
+            'message': 'input data error',
+            'status': -1,
+        }
+        return jsonify(data)
+    else:
+
+        hms=' 23:55:00'
+        hms_n=datetime.datetime.now().strftime(" %H:%M:%S")
+        ymr = e_date[:4]+'-'+e_date[4:-2]+'-'+e_date[-2:]
+        timestamp=ymr+hms if flag==1 else ymr+hms_n
+        input_date=s_date+'_'+e_date if flag==1 else s_date
+
+        data=Hbase_controller(tag,input_date,page,size)
+        status,message=(0,'success') if data else (-1,'service failed')     ##可能thriftserver down导致
+        data={
+            'data':data,
+            'update_time':timestamp,
+            'message': message,
+            'page':page,
+            'size':size,
+            'status': status,
+        }
+        return jsonify(data)
+
 if __name__ == '__main__':
     try:
         # main()
@@ -167,10 +276,10 @@ if __name__ == '__main__':
                     use_debugger=True,
                     use_reloader=False)
     except Exception as e:
-        print(type(e))
+        print(e)
         if e.args[0]==48:
             print('hahah')
-            cmd_pid=commands.getoutput('lsof -i:5800|grep python')
+            cmd_pid=commands.getoutput('lsof -i:5801|grep python')
             print(cmd_pid)
             pid=re.findall(r'\d+',cmd_pid)[0]
             print(pid)

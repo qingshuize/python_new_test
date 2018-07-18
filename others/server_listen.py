@@ -5,6 +5,7 @@ from email.mime.text import MIMEText
 from email.header import Header
 import datetime
 import time
+import os
 
 #监测多台服务器（包含爬虫部署主服务器）cpu利用率过高，发出警告邮件提醒。
 
@@ -28,6 +29,10 @@ def Cpu_handle(ip, username, passwd, cmd):
         stdin, stdout, stderr = ssh.exec_command(cmd)
         stdin.write("Y")
         print('%s 已成功连接!!'%server_name.get(ip))
+
+        change_flag(ip)
+
+
         out = stdout.readlines()
         cpu_use_rate_list=[]
         print('wait! ... ...')
@@ -39,7 +44,7 @@ def Cpu_handle(ip, username, passwd, cmd):
                 cpu_use_rate_list.append(float(cpu_use_rate))
         avery_rate=float('%.2f'%(sum(cpu_use_rate_list)/len(cpu_use_rate_list)))
         print('%s CPU平均使用率:'%server_name.get(ip) +str(avery_rate)+'%')
-        if avery_rate>=98.00:
+        if avery_rate>=95.00:
             send_mail(avery_rate=avery_rate,mail_type='CPU使用率报警')
 
         ssh.close()
@@ -52,9 +57,35 @@ def Cpu_handle(ip, username, passwd, cmd):
             ssh.connect(ip, 22, username, passwd)
             time.sleep(0.5)
             print('ok!  %s 已成功连接!!' % server_name.get(ip))
+            change_flag(ip)
             ssh.close()
         except:
-            send_mail()
+            if ip not in read_flag():
+                send_mail()
+                write_flag(ip,'a')
+
+
+
+def write_flag(ip,types):
+    with open('./flag.txt', '%s'%types) as f:
+        f.write(ip+'\n')
+
+def read_flag():
+    if os.path.exists('./flag.txt'):
+        with open('./flag.txt', 'r') as f:
+            data=f.readlines()
+        data=map(lambda x:x.strip(),data)
+    else:
+        data=[]
+    return data
+
+def change_flag(ip):
+    if ip in read_flag():
+        data = read_flag()
+        data.remove(ip)
+        for i in data:
+            write_flag(i, 'w')
+
 
 
 def send_mail(avery_rate=None,mail_type='SSH连接异常'):
@@ -93,16 +124,19 @@ def send_mail(avery_rate=None,mail_type='SSH连接异常'):
         print(e)
 
 
-if __name__=='__main__':
-    master_server={
-        '123.206.29.196':'tXDmVLUMq9CDY',   #爬虫主服务器
+def main():
+    master_server = {
+        '123.206.29.196': 'tXDmVLUMq9CDY',  # 爬虫主服务器
         # '39.107.205.65': '19930301qiMBpG',  # 大数据主服务器
         # '39.107.204.13': '19930301qiMBpG',   # 大数据从服务器
         # '139.199.97.167':'sh9vSGMinwr',    #supervisor服务器监控
-        '123.206.73.147': 'tXDmVLUMq9CDY',   #爬虫服务器slave1
-        '123.206.55.84': 'kF4hMs4mk6sGW',   #爬虫服务器slave3
-        '118.89.232.201': 'nPtCxmHIcr9yfH'  #爬虫服务器slave15
+        '123.206.73.147': 'tXDmVLUMq9CDY',  # 爬虫服务器slave1
+        '123.206.55.84': 'kF4hMs4mk6sGW',  # 爬虫服务器slave3
+        '118.89.232.201': 'nPtCxmHIcr9yfH'  # 爬虫服务器slave15
     }
-    cmd='top -bi -n 180 -d 1|grep -E "Cpu"'   #间隔1s刷新一次，取样180次
-    for ip,passwd in master_server.items():
-        Cpu_handle(ip,'root',passwd,cmd)
+    cmd = 'top -bi -n 180 -d 1|grep -E "Cpu"'  # 间隔1s刷新一次，取样180次
+    for ip, passwd in master_server.items():
+        Cpu_handle(ip, 'root', passwd, cmd)
+
+if __name__=='__main__':
+    main()

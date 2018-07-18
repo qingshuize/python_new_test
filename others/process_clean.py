@@ -31,7 +31,7 @@ def ssh_login(ip,username,passwd,cmd,limit_hour=''):
                             print('info:' + info)
                             run_day = (datetime.datetime.now()-raw_start_time).days
                             print('运行天数：' + str(run_day))
-                            if run_day > 1 or re.findall('(phantomjs|shenbao|jiguan|neeq_capital_company_num|weixin_html)', info):
+                            if run_day > 1 or re.findall('(phantomjs|totalnews_img_save)', info):
                                 ssh.exec_command('kill -9 %s' % pid)
                                 print('kill ok!')
 
@@ -54,7 +54,7 @@ def ssh_login(ip,username,passwd,cmd,limit_hour=''):
                                 print('servers ip:' + ip)
                                 print('time_run:%s小时%s分钟' %(run_time_hour,run_time_minute))
                                 try:
-                                    if re.findall('(phantomjs|shenbao|jiguan|ganggu_industry)', info):
+                                    if re.findall('(phantomjs|shenbao|jiguan|ganggu_industry|ipo_csrc_pdf)', info):
                                         ssh.exec_command('kill -9 %s' % pid)
                                         print('kill ok!')
                                 except Exception as e:
@@ -89,7 +89,6 @@ if __name__ =='__main__':
         '47.95.36.57': '1993newsWL0301',
         '123.206.55.84': 'kF4hMs4mk6sGW',
         '139.199.97.233': 'sh9vSGMinwr'
-        # '39.107.205.65':'19930301qiMBpG'  #大数据服务器
     }
 
     ##执行的指令

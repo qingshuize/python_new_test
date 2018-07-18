@@ -20,6 +20,29 @@ def file_chardetect():
         file_type=chardet.detect(data)['encoding']
         print('encoding: ',file_type)
 
+def write_flag(ip,types):
+    with open('./flag.txt', '%s'%types) as f:
+        f.write(ip+'\n')
+
+def read_flag():
+    if os.path.exists('./flag.txt'):
+        with open('./flag.txt', 'r') as f:
+            data=f.readlines()
+        data=map(lambda x:x.strip(),data)
+    else:
+        data=[]
+    return data
 
 if __name__ == '__main__':
-    file_chardetect()
+    # file_chardetect()
+    # write_flag('2.343.123','a')
+    s=read_flag()
+    print(s)
+    os.remove('./flag.txt')
+    if s:
+        s.remove('2.343.123')
+        print(s)
+        for i in s:
+            write_flag(i,'a')
+
+

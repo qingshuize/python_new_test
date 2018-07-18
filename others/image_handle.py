@@ -1,8 +1,9 @@
 #coding:utf8
 from PIL import Image
-from pytesser import pytesser
+# from pytesser import pytesser
+import pytesseract
 def Image_handle():
-    img=Image.open('/Users/qmp/Desktop/timg.jpeg')
+    img=Image.open('/Users/qmp/Desktop/5.jpg')
 
     #把彩色图像转化为灰度图像。RBG转化到HSI彩色空间，采用I分量
     img1= img.convert('L')
@@ -22,7 +23,11 @@ def Image_handle():
     print(pytesser.image_to_string(out))
 
 
+def get_text():
+    text = pytesseract.image_to_string(Image.open('/Users/qmp/Desktop/5.jpg'), lang='chi_sim')
+    print(text)
 
 
 if __name__ == '__main__':
-    Image_handle()
+    # Image_handle()
+    get_text()
