@@ -6,11 +6,7 @@ import os
 import requests
 from peewee import *
 URL_db = MySQLDatabase(
-    host='47.94.38.128',
-    database='shujujiance',
-    user="shujujiance_pyt",
-    passwd="f5W1vg##e1cf",
-    charset='utf8'
+   ###
 )
 
 def ganggu_zhaogu_link_real():
@@ -47,7 +43,7 @@ def ssh_login(ip,username,passwd,cmd):
         print('%s\tError\n'%(ip))
 
 if __name__ =='__main__':
-    server_list=['47.94.43.94','1993fileWL0301']
+    server_list=[###]
     #ps -aux|grep phantomjs
     cmd = ['source /alidata/qmp_code/qmp_venv/bin/activate','cd /alidata1/www/pdf1.qimingpian.com']
     print("start... ... ... ...")
