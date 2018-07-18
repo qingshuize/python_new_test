@@ -109,7 +109,7 @@ class Data2Es_handle(object):
 
     def __init__(self):
         self.dest_host={
-            "host":"10.30.51.108",
+            "host":"",
             "port":9200,
             "timeout": 10
         }
