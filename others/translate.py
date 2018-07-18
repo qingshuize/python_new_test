@@ -5,12 +5,7 @@ import requests
 from peewee import *
 
 mysql_db = MySQLDatabase(
-    host='123.206.83.21',
-    port=3306,
-    database='news',
-    user="news",
-    passwd="datadang#news@316",
-    charset='utf8'
+###
 )
 
 def try_except(func):
