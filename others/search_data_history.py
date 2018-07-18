@@ -12,18 +12,10 @@ class RetryMySQLDatabase(RetryOperationalError, MySQLDatabase):
     pass
 
 db = MySQLDatabase(
-    host='47.94.42.90',
-    database='shujujiance',
-    user="readonly",
-    passwd="pqRi2MXjFINsX1UP",
-    charset='utf8'
+    ####
 )
 URL_db = MySQLDatabase(
-    host='47.94.38.128',
-    database='shujujiance',
-    user="shujujiance_pyt",
-    passwd="f5W1vg##e1cf",
-    charset='utf8'
+    #
 )
 
 def get_search_data(day,s_type):
