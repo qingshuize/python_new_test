@@ -31,8 +31,8 @@ def main(date,num):
             select_hour = '23'  # 去每天最后一小时记录
 
         tablename = 'search_history_order_%s' % date
-        #39.107.205.65
-        conn = happybase.Connection('123.206.77.49')    #123.206.77.49
+        ##
+        conn = happybase.Connection('##')    
         table = conn.table(tablename)
         colum = 'order_value:'
         filter = "RowFilter(=,'regexstring:^%s')" % select_hour
@@ -77,7 +77,7 @@ class Hbase_getdata_test(object):
     protocol：协议
     """
     def __init__(self):
-        self.conn = happybase.Connection(host="123.206.77.49", port=9090)
+        self.conn = happybase.Connection(host="##", port=9090)
         # ,timeout = None, autoconnect = True, table_prefix = None, table_prefix_separator = b'_', compat = '0.98', transport = 'buffered', protocol = 'binary')
     def create_t(self,table_name):
         families = {
@@ -185,7 +185,7 @@ class Hbase_getdata_test(object):
 
 
 
-    # conn = happybase.Connection('123.206.77.49')  # 123.206.77.49
+    # conn = happybase.Connection('##') 
     # conn.open()
     # t_list=conn.tables()
     # print(t_list)
