@@ -8,11 +8,7 @@ import xlwt,xlrd
 import happybase
 
 URL_s_db = MySQLDatabase(
-    host='47.94.42.90',
-    database='shujujiance',
-    user="readonly",
-    passwd="pqRi2MXjFINsX1UP",
-    charset='utf8'
+***
 )
 
 class Hive_handle(object):
