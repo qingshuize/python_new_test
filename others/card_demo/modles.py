@@ -6,10 +6,7 @@ class RetryMySQLDatabase(RetryOperationalError, MySQLDatabase):
     pass
 
 SJJC_db = RetryMySQLDatabase('shujujiance',
-                           **{'host': '47.94.38.128',
-                              'user': 'shujujiance_pyt',
-                              'password': 'f5W1vg##e1cf',
-                              'port': 3306,
+                           **{
                               })
 
 
