@@ -5,13 +5,7 @@ import re
 import time
 import signal
 qmpnews_db = MySQLDatabase(
-    host='47.94.38.128',
-    port=3306,
-    database='qmpnews',
-    user="qmpnews",
-    passwd="q1a#9nB@88RePws",
-    charset='utf8'
-)
+   ##
 
 def copy_url_s():
     path='/alidata1/www/pdf1.qimingpian.com/announcement_real/'
