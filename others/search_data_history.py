@@ -92,16 +92,26 @@ def get_hz_ip_data(date):
     print('excel data save success!!')
     read_excel(str(date))
 
-
 def select_max():
     sql='select max(id) from search_hot_key_history'
     res=URL_db.execute_sql(sql)
     info=res.fetchone()[0]
     return info if info else 0
 
+def update_display(date):
+    update_sql = 'update search_hot_key_history set display_flag=0 where date_time="%s"'
+    URL_db.execute_sql(update_sql,[date])
+    print('change status ok!')
+
+def insert_data(date,words,n):
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    add_sql = 'insert into search_hot_key_history(date_time,keyword,search_num,sort,create_time,update_time) value(%s,%s,%s,%s,%s,%s)'
+    URL_db.execute_sql(add_sql, [date, words, n, select_max(), now, now])
+    print('add ok!')
+
 def demo_test(date):
     print(date)
-    sql = 'select words,count(*) as num from search_magic_history where create_time regexp "%s" and external_flag!=0 GROUP BY words order by num desc limit 10' % date
+    sql = 'select words,count(1) as num from search_magic_history where create_time regexp "%s" and external_flag!=0 GROUP BY words order by num desc limit 10' % date
     cusor=URL_db.execute_sql(sql)
     result=cusor.fetchall()
     if result:
@@ -111,13 +121,10 @@ def demo_test(date):
             print(words,n)
             select_sql='select count(1) from search_hot_key_history where date_time=%s'%date
             cusor0=URL_db.execute_sql(select_sql)
-            if cusor0.fetchone()[0]!=10:
-                now=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                add_sql='insert into search_hot_key_history(date_time,keyword,search_num,sort,create_time,update_time) value(%s,%s,%s,%s,%s,%s)'
-                URL_db.execute_sql(add_sql,[date,words,n,select_max(),now,now])
-                print('add ok!')
-            else:
+            if cusor0.fetchone()[0]==10:
+                update_display(date)
                 print('is exist!!')
+            insert_data(date,words,n)
 
 
 
