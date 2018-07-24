@@ -379,6 +379,83 @@ def check_magic(s):
                     return True
     return False
 
+#动态规划
+"""
+给定一个数字三角形，找到从顶部到底部的最小路径和。每一步可以移动到下面一行的相邻数字上
+
+"""
+def minimumTotal(triangle):
+    # write your code here
+    lens = len(triangle)
+    # s = triangle[0][0]
+    # j = 0
+    # for i in range(1, lens):
+    #     min_s = min(triangle[i][j], triangle[i][j + 1])
+    #     j = j if min_s == triangle[i][j] else j + 1
+    #     s += min_s
+    # return s
+    for i in range(lens-2,-1,-1):
+        for j in range(len(triangle[i])):
+            triangle[i][j] += min(triangle[i + 1][j], triangle[i + 1][j + 1])
+    print(triangle)
+    return triangle[0][0]
+
+
+"""
+给定一个只含非负整数的m*n网格，找到一条从左上角到右下角的可以使数字和最小的路径。
+m*n 矩阵
+"""
+def minPathSum(grid):
+    s=np.array(grid)
+    m,n=s.shape
+    print(m,n)
+    for i in range(m):
+        for j in range(n):
+            if i==0 and j==0:
+                s[i][j] += 0
+            elif j==0 and i!=0:
+                s[i][j] += s[i-1][j]
+            elif i==0 and j!=0:
+                s[i][j] += s[i][j - 1]
+            else:
+                s[i][j]+=min(s[i-1][j],s[i][j-1])
+    return s[m-1][n-1]
+"""
+假设你正在爬楼梯，需要n步你才能到达顶部。但每次你只能爬一步或者两步，你能有多少种不同的方法爬到楼顶部？
+
+"""
+#递归
+def climbStairs(n):
+    s=[0 for i in range(n)]
+    # print(s)
+    if n<=0:
+        return 0
+    if n==1 or n==2:
+        return n
+    return climbStairs(n-1)+climbStairs(n-2)
+
+def staircase_s(n):
+    X=[1,2]#分为1步和2步
+    cache = [0 for _ in range(n + 1)]
+    cache[0] = 0
+    for i in range(n + 1):
+        cache[i] += sum(cache[i - x] for x in X if i - x > 0)
+        cache[i] += 1 if i in X else 0
+    print(cache)
+    return cache[-1]
+
+def uniquePaths(m, n):
+    print(m, n)
+    # s=[[0 for i in range(n)] for j in range(m)]
+    if m==n==1:
+        return 1
+    elif m==1 and n!=1:
+        return n
+    if n==1 and m!=1:
+        return m
+    return uniquePaths(m-1,n)+uniquePaths(m,n)
+
+
 if __name__ == '__main__':
     # for i in range(2,21):
     #     print('n = '+str(i))
@@ -409,4 +486,11 @@ if __name__ == '__main__':
     # print(formingMagicSquare(s_1))
     # get_magix_m()
     # print(check_magic(magic_s))
-    get_Sudoku()
+    # get_Sudoku()
+    s=[[-1],[2,3],[1,-1,-3]]
+    # print(minimumTotal(s))
+    s1=[[1,2],[1,1]]
+    # print(minPathSum(s1))
+    # print(climbStairs(10))
+    # print(staircase_s(6))
+    print(uniquePaths(3,3))
