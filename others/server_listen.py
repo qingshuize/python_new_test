@@ -97,9 +97,9 @@ def send_mail(avery_rate=None,mail_type='SSH连接异常'):
                     create_time:%s
                     ''' % now
 
-    password='Qimingpian666'
-    sender = 'wxk@shujujiance.com'
-    receiver = "lf051@qimingpian.com"
+    password=''
+    sender = ''
+    receiver = ""
 
     try:
         subject = '（%s）%s 服务器%s' % (server_name.get(ip), ip,mail_type)
