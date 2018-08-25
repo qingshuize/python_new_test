@@ -13,7 +13,7 @@ onlinehosts = [
 ]
 
 localhost = "127.0.0.1"
-alihost = "182.92.119.142"
+alihost = ""
 
 is_test = True
 if is_test:

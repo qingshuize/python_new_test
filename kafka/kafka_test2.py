@@ -11,10 +11,10 @@ from peewee import *
 import datetime
 
 pro_db = MySQLDatabase(
-    host='118.89.232.142',
-    database='qmp_logs',
-    user="root",
-    passwd="Qmppachong!@#321",
+    host='xx',
+    database='',
+    user="",
+    passwd="",
     charset='utf8'
 )
 

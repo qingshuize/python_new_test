@@ -176,18 +176,41 @@ def add_watermark(pdf_file_in, pdf_watermark,pdf_file_out,max_page=None):
     return True
 
 
+def Pdf_test():
+    path = './'
+    file_list = os.listdir(path)
+    for file in file_list:
+        try:
+            if file.endswith('.pdf'):
+                print(file)
+                input = PdfFileReader(open(path + file, "rb"))
+                title = input.getDocumentInfo().title
+                print("title: %s" % title)
+                number = input.getNumPages()
+                print('total pages:%s' % number)
+                content = ""
+                for i in range(3):
+                    #     page=input.getDocumentInfo()
+                    info = input.getPage(i)
+                    # print(info.getContents())
+                    extractedText = info.extractText()
+                    content += extractedText + "\n"
+                    print(content)
+                    #     print(info)
+                    #     use_info=re.findall('[.]+',str(info))
+                    #     print(use_info)
+        except Exception as e:
+            print(e)
+
 
 
 
 
 if __name__ =='__main__':
     pdf_watermark = create_pic_watermark(path + 'qmp_logo.png')  # 图片水印
-    pdf_watermark1 = create_word_watermark('企名片666')  # 文字水印
+    pdf_watermark1 = create_word_watermark('666')  # 文字水印
 
     # file_list=['1204342691.pdf','1204352020.PDF']
-    # sql='select id,title,pdf_source_link from mf_neeq_total where company="" or company is null and pdf_source_link like "%%%%pdf" order by id limit 10'
-    # sql='select code,pdf_source_link from mf_neeq_total inner join mf_capital_information where ipo_code=code and ipo_type="已挂牌" and category="公开转让说明书" limit 5,3'
-    # sql='select id,company,pdf_source_link from mf_neeq_total where code="" and title regexp "券商公告" order by id desc limit 1'
     sql = 'select id,company,pdf_source_link from mf_neeq_total order by size desc limit 1'
     cur=URL_db.execute_sql(sql)
     res=cur.fetchall()

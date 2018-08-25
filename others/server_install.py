@@ -10,7 +10,7 @@ def Server_pip_install(ip,username,passwd,cmd,package):
     try:
         ssh.connect(ip,22,username,passwd)
         print('\n' + 50 * '-' + '%s connected' % ip + 60 * '-' + '\n')
-        env_path = '/alidata/qmp_code' if ip in [] else '/qmp_code'
+        env_path = '/xx' if ip in [] else '/xxx'
         stdin, stdout, stderr = ssh.exec_command(cmd%((env_path,package) if 'yum' not in cmd else package))
         # stdin, stdout, stderr = ssh.exec_command(cmd % package)
         stdin.write("Y")
@@ -35,7 +35,7 @@ if __name__ =='__main__':
        ######
     }
     yum_cmd='sudo add-apt-repository ppa:coolwanglu/pdf2htmlex;yum -y install %s'
-    cmd = 'source %s/qmp_venv/bin/activate;pip install %s;pip list'
+    cmd = 'source %s/envs/bin/activate;pip install %s;pip list'
     #'xlrd' #'xlwt'
     try:
         package=sys.argv[-1]

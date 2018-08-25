@@ -19,7 +19,7 @@ def ssh_login(ip,username,passwd,cmd,limit_hour=''):
             out = stdout.readlines()
             for info in out:
                 try:
-                    if not re.findall('(save_totalnew_html_spider|save_onenew_html_spider)', info):
+                    if not re.findall('(xx|xxx)', info):
                         pid = re.findall('root(.*)', info)[0].strip().split(' ')[0]
 
                         try:
@@ -31,7 +31,7 @@ def ssh_login(ip,username,passwd,cmd,limit_hour=''):
                             print('info:' + info)
                             run_day = (datetime.datetime.now()-raw_start_time).days
                             print('运行天数：' + str(run_day))
-                            if run_day > 1 or re.findall('(phantomjs|totalnews_img_save)', info):
+                            if run_day > 1 or re.findall('(xx|xxx)', info):
                                 ssh.exec_command('kill -9 %s' % pid)
                                 print('kill ok!')
 
@@ -54,7 +54,7 @@ def ssh_login(ip,username,passwd,cmd,limit_hour=''):
                                 print('servers ip:' + ip)
                                 print('time_run:%s小时%s分钟' %(run_time_hour,run_time_minute))
                                 try:
-                                    if re.findall('(phantomjs|shenbao|jiguan|ganggu_industry|ipo_csrc_pdf)', info):
+                                    if re.findall('(xx)', info):
                                         ssh.exec_command('kill -9 %s' % pid)
                                         print('kill ok!')
                                 except Exception as e:

@@ -6,7 +6,7 @@ import time
 
 def get_spiderkeeper():
     headers={
-        'Host':'123.206.29.196',
+        'Host':'xx',
         'Cookie':'session=eyJwcm9qZWN0X2lkIjoiMSJ9.DdGTvg.4HwfsrVbsqXrxl0O2ncmtuKdexQ',
         'Connection':'keep-alive',
         'Upgrade-Insecure-Requests':'1',
@@ -17,14 +17,14 @@ def get_spiderkeeper():
         'Authorization':'Basic YWRtaW46cnFwNndnYXEjMQ==',
     }
     Authentication={
-        'Server':{'Basic Authentication':{'User ID':'admin','Password':'rqp6wgaq#1'}}
+        'Server':{'Basic Authentication':{'User ID':'xx','Password':'xxxx'}}
     }
-    pro_item={'1':'liebao_spider',
-              '2':'secondary_market'
+    pro_item={'1':'x',
+              '2':'xxx'
     }
     for pro_id,pro in pro_item.items():
-        url='http://123.206.29.196/project/%s/job/dashboard'%pro_id
-        headers['Referer']='http://123.206.29.196/project/%s/job/dashboard'%pro_id
+        url='http://xx/project/%s/job/dashboard'%pro_id
+        headers['Referer']='http://xx/project/%s/job/dashboard'%pro_id
         res = requests.get(url,headers=headers)
         print(20*"//"+'spider project:'+pro+20*"//")
         if res.status_code==200:

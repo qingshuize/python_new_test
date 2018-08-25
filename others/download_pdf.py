@@ -11,7 +11,6 @@ def download():
         'Connection':'keep-alive',
         'Cookie':'BIGipServerpool_IPO=845457600.20480.0000; acw_tc=AQAAAH4TeAWHkwcAFrybJ88lduA3N1ta'
     }
-    # url='http://ipo.csrc.gov.cn/pdfdownload.action?blockType=intention&ipoCode=731042634&xmlId=3&pdfBatch=%2Fxbrl2%2Fexhibitxbrl%2F%2F792573957%2F10198%2FCN-731042634-GA0101-20180126-31.pdf'
     url1='http://www.hkexnews.hk/APP/SEHK/2018/2018011501/Documents/SEHK201801300030_c.pdf'
     res=requests.get(url1,stream=True)
     path='/Users/qmp/Desktop/'

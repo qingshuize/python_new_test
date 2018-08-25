@@ -16,7 +16,7 @@ mysql={
         'password': '123456',
         'port': 3306,
         'user': 'root',
-        "database": 'shujujiance',
+        "database": '',
     }
 
 }

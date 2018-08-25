@@ -156,7 +156,6 @@ if __name__ == '__main__':
 #     #制作图片水印
 #     pdf_obj.create_pic_watermark('qmp_logo1.png')
 #
-    # url='http://pdf1.qimingpian.com/announcement/5af515ae557ce.pdf'
     # file_pdf=url.split('/')[-1].strip()
     #
     # if not os.path.exists(path+file_pdf):

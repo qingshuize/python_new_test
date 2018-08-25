@@ -65,4 +65,3 @@ def main():
     portscan(tghost,tgport)
 if __name__ == '__main__':
     main()
-    # portscan('47.93.138.179',[i for i in range(1024)])

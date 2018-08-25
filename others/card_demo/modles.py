@@ -5,7 +5,7 @@ from playhouse.shortcuts import RetryOperationalError
 class RetryMySQLDatabase(RetryOperationalError, MySQLDatabase):
     pass
 
-SJJC_db = RetryMySQLDatabase('shujujiance',
+SJJC_db = RetryMySQLDatabase('xx',
                            **{
                               })
 

@@ -1,13 +1,18 @@
 #coding:utf8
 
-import traceback, tempfile
+import  tempfile
 from PyPDF2 import PdfFileReader
 import requests
 import time
+import io
+import traceback
+from PyPDF2 import PdfFileReader
+
 path='/Users/qmp/Desktop/'
 from peewee import *
 URL_db = MySQLDatabase(
     ###
+)
 
 #
 # def isValidPDF_bytes(pdfBytes):
@@ -25,8 +30,6 @@ URL_db = MySQLDatabase(
 
     # return bValid
 
-import io, traceback,os
-from PyPDF2 import PdfFileReader
 
 
 def isValidPDF_bytes(pdfBytes):

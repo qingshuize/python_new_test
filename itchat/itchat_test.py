@@ -23,7 +23,7 @@ def text_reply(msg):
     friend = itchat.search_friends(userName=msg['FromUserName'])
     # print(friend)
     print(msg['Type'])
-    if friend['NickName'] in [u'飘荡在北方',u'Phantom']:
+    if friend['NickName'] in [u'x',u'xx']:
         if msg['Type'] in ['Text','Note']:
             info=msg['Content'].replace(' ','').encode('utf8')
             if not re.findall(r"(傻|sb|SB|煞笔)", info):
@@ -61,7 +61,7 @@ def Reply_media(msg):
     content=msg.get(u'Content')
     url=re.findall(r'cdnurl="(.*)"designerid',content.replace(' ',''))[0]
     print(url)
-    if friend['NickName'] in [u'飘荡在北方',u'Phantom']:
+    if friend['NickName'] in [u'x',u'xx']:
         filename=msg.get(u'MsgId')+'.png'
         res=requests.get(url)
         with open(filename,'w') as f:

@@ -7,7 +7,6 @@ import paramiko
 import re,json
 
 KAFAKA_HOST = '127.0.0.1'
-#'182.92.119.142'
 KAFAKA_PORT = 9092
 KAFAKA_TOPIC = 'world'
 

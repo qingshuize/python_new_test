@@ -1,7 +1,7 @@
 #coding:utf8
 import comtypes.client
 import os
-path='/Users/qmp/Desktop/'
+path='./'
 
 def init_ppt():
     ppt=comtypes.client.CreateObject('Powerpoint.Application')

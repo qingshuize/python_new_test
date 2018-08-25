@@ -3,7 +3,7 @@ import commands
 import re,os
 def send_mail_test():
     content='test mail,2322434'
-    commands.getoutput('echo %s | mail -s "pyhton mail test from XXX" lf@qimingpian.com'%content)
+    commands.getoutput('echo %s | mail -s "pyhton mail test from XXX" x@aaa.com'%content)
 
 def download_test():
     path='/Users/qmp/Desktop/'

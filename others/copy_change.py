@@ -6,9 +6,10 @@ import time
 import signal
 qmpnews_db = MySQLDatabase(
    ##
+)
 
 def copy_url_s():
-    path='/alidata1/www/pdf1.qimingpian.com/announcement_real/'
+    path='./'
     sql='select url from mf_file_list where is_watermark=1 limit 10'
     update_sql='update mf_file_list set url=replace(url,"announcement","announcement_real") where is_watermark=1'
     cusor=qmpnews_db.execute_sql(sql)

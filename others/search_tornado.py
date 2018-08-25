@@ -15,6 +15,7 @@ class RetryMySQLDatabase(RetryOperationalError, MySQLDatabase):
     pass
 
 db = RetryMySQLDatabase(
+    ##
     
 )
 
