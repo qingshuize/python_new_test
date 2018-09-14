@@ -8,12 +8,12 @@ from pdfminer.converter import TextConverter,PDFPageAggregator
 from pdfminer.layout import LAParams
 from pdfminer.layout import *
 from pdfminer.pdfpage import PDFPage,PDFTextExtractionNotAllowed
-import re
 from peewee import *
 from hashlib import md5
 import requests
 import os
 import urllib2
+from log_tool import *
 
 path = '/Users/qmp/Desktop/'
 
@@ -21,16 +21,6 @@ URL_db = MySQLDatabase(
 ##
 )
 
-
-def try_error(func):
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except Exception as e:
-            print(e)
-            print('Error!')
-
-    return wrapper
 
 
 @try_error
