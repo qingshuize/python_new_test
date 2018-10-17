@@ -149,7 +149,8 @@ if __name__ == '__main__':
                 use_reloader=True)
     except Exception as e:
         print(e)
-        try:
+        """
+	try:
             if e.args[0]==48:
                 print('hahah')
                 cmd_pid=commands.getoutput('lsof -i:5800|grep python')
@@ -163,3 +164,4 @@ if __name__ == '__main__':
                     print('kill port ok!')
         except:
             pass
+	"""
