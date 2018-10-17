@@ -138,30 +138,10 @@ def ADD_watermark2pdf():
 
 
 if __name__ == '__main__':
-    try:
-        # Hbase_get()
-        app.run(debug=True,
-                host='127.0.0.1',
-                port=5800,
-                threaded=True,
-                processes=0,
-                use_debugger=True,
-                use_reloader=True)
-    except Exception as e:
-        print(e)
-        """
-	try:
-            if e.args[0]==48:
-                print('hahah')
-                cmd_pid=commands.getoutput('lsof -i:5800|grep python')
-                print(cmd_pid)
-                pid=re.findall(r'\d+',cmd_pid)[0]
-                print(pid)
-                try:
-                    kill_cmd='kill -9 %s'
-                    commands.getoutput(kill_cmd%pid)
-                except Exception as e:
-                    print('kill port ok!')
-        except:
-            pass
-	"""
+    app.run(debug=True,
+            host='127.0.0.1',
+            port=5800,
+            threaded=True,
+            processes=0,
+            use_debugger=True,
+            use_reloader=True)
