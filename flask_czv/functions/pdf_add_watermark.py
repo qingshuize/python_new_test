@@ -92,41 +92,44 @@ class PDF_watermark_handle(object):
         return x,y
 
     def add_watermark(self,link, word,outdir):
-        pdf_file=self.get_url_content(link)
-        pdf_output = PdfFileWriter()
-        input_s = open(self.path+pdf_file, 'rb')
-        pdf_input = PdfFileReader(input_s)
-
-        #加密检测
-        self.solve_encrypt(pdf_input)
-
-        # 获取页数
-        pageNum = pdf_input.getNumPages()
-
-        w, h = self.get_pdf_size(pdf_input, 0)
-        watermark_file='watermark_%s'%pdf_file
-        self.create_word_watermark(word, watermark_file, w, h)
-        print('create watermark tempalte ok!')
-
-        # # 给每一页打水印
-        for i in range(pageNum):
-            print(i)
-            page = pdf_input.getPage(i)
-            w, h = self.get_pdf_size(pdf_input, i)
-            # self.create_pic_watermark('qmp_logo1.png')
-            print('add watermark ok!')
-            pdf_watermark = PdfFileReader(open(watermark_file, 'rb'))
-            page.mergePage(pdf_watermark.getPage(0))
-            page.compressContentStreams()  # 压缩内容
-            pdf_output.addPage(page)
-        if not os.path.exists(self.path+outdir):
-            os.makedirs(self.path+outdir)
-        out_file = pdf_file.replace('.pdf', '（加文字水印）.pdf')
-        output_s = open(self.path+outdir+out_file, 'wb')
-        pdf_output.write(output_s)
-        output_s.close()
-        input_s.close()
-        return self.path+outdir+out_file
+        try:
+            pdf_file = self.get_url_content(link)
+            pdf_output = PdfFileWriter()
+            input_s = open(self.path + pdf_file, 'rb')
+            pdf_input = PdfFileReader(input_s)
+    
+            #加密检测
+            self.solve_encrypt(pdf_input)
+    
+            # 获取页数
+            pageNum = pdf_input.getNumPages()
+    
+            w, h = self.get_pdf_size(pdf_input, 0)
+            watermark_file='watermark_%s'%pdf_file
+            self.create_word_watermark(word, watermark_file, w, h)
+            print('create watermark tempalte ok!')
+    
+            # # 给每一页打水印
+            for i in range(pageNum):
+                print(i)
+                page = pdf_input.getPage(i)
+                w, h = self.get_pdf_size(pdf_input, i)
+                # self.create_pic_watermark('qmp_logo1.png')
+                print('add watermark ok!')
+                pdf_watermark = PdfFileReader(open(watermark_file, 'rb'))
+                page.mergePage(pdf_watermark.getPage(0))
+                page.compressContentStreams()  # 压缩内容
+                pdf_output.addPage(page)
+            if not os.path.exists(self.path+outdir):
+                os.makedirs(self.path+outdir)
+            out_file = pdf_file.replace('.pdf', '（加文字水印）.pdf')
+            output_s = open(self.path+outdir+out_file, 'wb')
+            pdf_output.write(output_s)
+            output_s.close()
+            input_s.close()
+            return self.path+outdir+out_file
+        except:
+            pass
 
     def get_url_content(self,url):
         res=requests.get(url)

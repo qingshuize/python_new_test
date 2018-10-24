@@ -6,7 +6,7 @@ sys.setdefaultencoding('utf-8')
 import time
 import datetime
 import happybase
-from flask import Flask,jsonify,request
+from flask import Flask,jsonify,request,render_template
 from functions.pdf_add_watermark import *
 app=Flask(__name__)
 
@@ -121,18 +121,18 @@ def Hbase_get(date,num):
 @app.route('/pdf_download',methods=['GET'])
 def ADD_watermark2pdf():
     link=request.values['link']
-    path='./'
+    path='/mydata/data/files/'
     pdf_obj = PDF_watermark_handle(path)
     out_dest=pdf_obj.add_watermark(link,'天空飘来五个字？','output/')
-    print(out_dest)
+    out_info='/'.join(out_dest.split('/')[-2:]) if out_dest else '#'
     return '''
     <html>
     <head>
     <body>
-    <a href="file://%s" download="dowload_pdf"><strong>pdf download</strong></a>
+    <a href="http://www.qingshuize.com/%s" download="dowload_pdf"><strong>add pdf watermark</strong></a>
     </body>
     </html>
-    '''%(out_dest)
+    '''%(out_info)
 
 
 
