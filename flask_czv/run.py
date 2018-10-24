@@ -124,7 +124,7 @@ def ADD_watermark2pdf():
     path='/mydata/data/files/'
     pdf_obj = PDF_watermark_handle(path)
     out_dest=pdf_obj.add_watermark(link,'天空飘来五个字？','output/')
-    out_info='/'.join(out_dest.split('/')[-2:]) if out_dest else '#'
+    out_info='/'.join(out_dest.split('/')[3:]) if out_dest else '#'
     return '''
     <html>
     <head>
