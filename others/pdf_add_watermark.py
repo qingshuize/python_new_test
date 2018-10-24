@@ -11,7 +11,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from hashlib import md5
 
 #添加中文字体库
-pdfmetrics.registerFont(TTFont('songti', '/mydata/nginx/www/file.com/Fonts/Songti.ttc'))
+# pdfmetrics.registerFont(TTFont('songti', '/mydata/nginx/www/file.com/Fonts/Songti.ttc'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode', '/Library/Fonts/Arial Unicode.ttf'))
 
 class PDF_watermark_handle(object):

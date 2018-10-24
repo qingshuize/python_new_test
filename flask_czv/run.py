@@ -1,18 +1,20 @@
 #coding:utf8
+import sys
+import os
+reload(sys)
+sys.setdefaultencoding('utf-8')
+print(os.path.abspath('..'))
+os.path.join(os.path.abspath('..'))
 import time
 import datetime
 import happybase
-import commands
-import re
 from flask import Flask,jsonify,request
-from pdf_add_watermark import *
-import webbrowser
-sys.path.append("libs")
+from others.pdf_add_watermark import *
 app=Flask(__name__)
 
-@app.route('/',methods=['GET'])
+@app.route('/')
 def index():
-    return 'Hi!'
+    return 'Hola!!!'
 
 def stamp2time(x,flag):
     # 时间戳转换为日期时间
