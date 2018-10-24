@@ -3,13 +3,11 @@ import sys
 import os
 reload(sys)
 sys.setdefaultencoding('utf-8')
-print(os.path.abspath('..'))
-os.path.join(os.path.abspath('..'))
 import time
 import datetime
 import happybase
 from flask import Flask,jsonify,request
-from others.pdf_add_watermark import *
+from functions.pdf_add_watermark import *
 app=Flask(__name__)
 
 @app.route('/')
@@ -123,10 +121,10 @@ def Hbase_get(date,num):
 @app.route('/pdf_download',methods=['GET'])
 def ADD_watermark2pdf():
     link=request.values['link']
-    pdf_obj = PDF_watermark_handle()
-    pdf_obj.create_word_watermark('天空飘来五个字？','test0')
-    file_name=pdf_obj.get_url_content(link)
-    out_dest=pdf_obj.add_watermark(file_name,'test0.pdf','output/')
+    path='./'
+    pdf_obj = PDF_watermark_handle(path)
+    out_dest=pdf_obj.add_watermark(link,'天空飘来五个字？','output/')
+    print(out_dest)
     return '''
     <html>
     <head>
