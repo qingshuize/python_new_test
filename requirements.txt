@@ -104,7 +104,7 @@ Twisted==16.3.2
 tzlocal==1.3
 urllib3==1.22
 w3lib==1.15.0
-Werkzeug==0.12.1
+Werkzeug==0.15.3
 wkhtmltopdf==0.2
 wxpy==0.3.9.8
 xlib==0.21
