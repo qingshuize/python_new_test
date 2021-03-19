@@ -38,7 +38,7 @@ ipaddress==1.0.19
 itchat==1.2.32
 itsdangerous==0.24
 jieba==0.39
-Jinja2==2.9.6
+Jinja2==2.11.3
 kafka==1.3.5
 lightblue==0.4
 ll==1.0
