@@ -102,7 +102,7 @@ tqdm==4.8.4
 Tree==0.2
 Twisted==16.3.2
 tzlocal==1.3
-urllib3==1.22
+urllib3==1.26.5
 w3lib==1.15.0
 Werkzeug==0.12.1
 wkhtmltopdf==0.2
